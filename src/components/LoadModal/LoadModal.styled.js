@@ -19,4 +19,8 @@ export const ModalBox = styled.div`
   p {
     color: #ffffff;
   }
+  @media (max-width: 650px) {
+    width: 85%;
+    height: 80px;
+  }
 `;

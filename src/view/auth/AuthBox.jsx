@@ -14,6 +14,9 @@ const AuthBox = () => {
     text: "",
   });
 
+  const handleOpenLoader = (text) => setLoader({ open: true, text });
+  const handleCloseLoader = () => setLoader({ open: false, text: "" });
+
   return (
     <>
       <AuthBoxBlock>
@@ -31,7 +34,8 @@ const AuthBox = () => {
               <OtpForm
                 email={emailForm.email}
                 restartProcess={setEmailForm}
-                handleOpenLoader={setLoader}
+                openLoader={handleOpenLoader}
+                closeLoader={handleCloseLoader}
               />
             </>
           )}

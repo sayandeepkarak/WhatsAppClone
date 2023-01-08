@@ -2,7 +2,6 @@ import styled from "styled-components";
 import Button from "@mui/material/Button";
 
 export const AuthScreenBlock = styled.div`
-  width: 100%;
   max-height: 100vh;
   height: 100vh;
   background-color: var(--dark);
@@ -12,7 +11,6 @@ export const AuthScreenTop = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  width: 100%;
   height: 222px;
   background-color: var(--theme);
 `;
@@ -30,6 +28,12 @@ export const AuthLogoBlock = styled.div`
     text-transform: uppercase;
     font-weight: 500;
     font-size: 14px;
+  }
+  @media (max-width: 1100px) {
+    margin: 22px 36px 28px;
+  }
+  @media (max-width: 650px) {
+    margin: 18px 28px;
   }
 `;
 
@@ -49,6 +53,15 @@ export const AuthBoxBlock = styled.div`
   justify-content: center;
   align-items: flex-start;
   padding-top: 132px;
+  @media (max-width: 900px) {
+    padding-top: 100px;
+  }
+  @media (max-width: 650px) {
+    padding-top: 85px;
+  }
+  @media (max-width: 340px) {
+    width: 340px;
+  }
 `;
 
 export const AuthBoxArea = styled.div`
@@ -58,6 +71,15 @@ export const AuthBoxArea = styled.div`
   border-radius: 3px 3px 0px 0px;
   filter: drop-shadow(2px 2px 7px #00000022);
   padding: 64px 62px;
+  @media (max-width: 1000px) {
+    width: 100%;
+    margin: 0px 40px;
+  }
+  @media (max-width: 650px) {
+    margin: 0;
+    padding: 50px 10px;
+    height: calc(100vh - 85px);
+  }
 `;
 
 export const HeadText = styled.p`
@@ -65,6 +87,13 @@ export const HeadText = styled.p`
   font-weight: 300;
   font-size: 28px;
   color: var(--text-dark);
+  @media (max-width: 650px) {
+    text-align: center;
+    font-size: 24px;
+  }
+  @media (max-width: 370px) {
+    font-size: 22px;
+  }
 `;
 
 export const AuthForm = styled.form.attrs({ autoComplete: "off" })`
@@ -78,12 +107,15 @@ export const AuthForm = styled.form.attrs({ autoComplete: "off" })`
 `;
 
 export const FormLabel = styled.label`
-  font-size: 20px;
+  font-size: 18px;
   &::first-letter {
     text-transform: capitalize;
   }
   font-weight: 500;
   color: var(--teal);
+  @media (max-width: 650px) {
+    font-size: 16px;
+  }
 `;
 
 export const AuthTextBox = styled.input.attrs({
@@ -95,11 +127,20 @@ export const AuthTextBox = styled.input.attrs({
   border: none;
   border-bottom: 2px solid var(--theme);
   width: 40%;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   text-align: center;
   &:focus {
     border-bottom: 2px solid var(--teal);
+  }
+  @media (max-width: 1000px) {
+    width: 280px;
+  }
+  @media (max-width: 650px) {
+    font-size: 14px;
+  }
+  @media (max-width: 425px) {
+    width: 80%;
   }
 `;
 
@@ -120,7 +161,7 @@ export const OtpTextBox = styled(AuthTextBox).attrs({
   placeholder: "-   -   -   -   -   -",
 })`
   letter-spacing: 8px;
-  width: 24%;
+  width: 190px;
   font-size: 25px;
   padding: 0% 2%;
   &::placeholder {

@@ -15,7 +15,7 @@ const Auth = () => {
         <AuthScreenTop>
           <AuthLogoBlock>
             <Logo src={logo} />
-            <span>whatsapp web</span>
+            <span>whatsapp clone</span>
           </AuthLogoBlock>
         </AuthScreenTop>
         <AuthBox />

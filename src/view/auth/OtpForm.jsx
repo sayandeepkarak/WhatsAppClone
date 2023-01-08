@@ -7,7 +7,7 @@ import {
   OtpTextBox,
 } from "./auth.styled";
 
-const OtpForm = ({ email, restartProcess, handleOpenLoader }) => {
+const OtpForm = ({ email, restartProcess, openLoader, closeLoader }) => {
   const otp = useRef();
   const [state, setstate] = useState({
     errorText: "Enter 6-digit code",
@@ -22,15 +22,9 @@ const OtpForm = ({ email, restartProcess, handleOpenLoader }) => {
     if (otp.current.value.length < 6) return;
     if (/^([0-9]){6}$/.test(otp.current.value)) {
       setstate({ ...state, errorText: "Enter 6-digit code" });
-      handleOpenLoader({
-        open: true,
-        text: "Verifying otp...",
-      });
+      openLoader("Verifying otp...");
       setTimeout(() => {
-        handleOpenLoader({
-          open: false,
-          text: "",
-        });
+        closeLoader();
         otp.current.value = "";
       }, 3000);
     } else {
@@ -45,22 +39,25 @@ const OtpForm = ({ email, restartProcess, handleOpenLoader }) => {
       resendButton: { disable: true, text: "resend otp again in" },
       counter: n,
     });
-    const interval = setInterval(() => {
-      n--;
-      setstate({
-        ...state,
-        resendButton: { disable: true, text: "resend otp again in" },
-        counter: n,
-      });
-      if (n === 0) {
-        console.log("hii");
+    openLoader("Resending otp...");
+    setTimeout(() => {
+      closeLoader();
+      const interval = setInterval(() => {
+        n--;
         setstate({
           ...state,
-          resendButton: { disable: false, text: "didn't receive code?" },
+          resendButton: { disable: true, text: "resend otp again in" },
+          counter: n,
         });
-        clearInterval(interval);
-      }
-    }, 1000);
+        if (n === 0) {
+          setstate({
+            ...state,
+            resendButton: { disable: false, text: "didn't receive code?" },
+          });
+          clearInterval(interval);
+        }
+      }, 1000);
+    }, 3000);
   };
 
   const handleRestart = () => restartProcess({ state: true, email: "" });
