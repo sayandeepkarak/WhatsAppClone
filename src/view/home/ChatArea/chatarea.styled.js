@@ -6,6 +6,9 @@ export const ChatAreaBlock = styled.div`
   @media (max-width: 1200px) {
     width: 60%;
   }
+  @media (max-width: 768px) {
+    width: 0;
+  }
 `;
 
 export const DefaultAreaBlock = styled.div`
