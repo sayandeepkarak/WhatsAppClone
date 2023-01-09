@@ -3,6 +3,9 @@ import styled from "styled-components";
 export const ChatAreaBlock = styled.div`
   height: 100%;
   width: 70%;
+  @media (max-width: 1200px) {
+    width: 60%;
+  }
 `;
 
 export const DefaultAreaBlock = styled.div`
@@ -44,5 +47,8 @@ export const DefaultAreaBlock = styled.div`
     color: var(--text-low-sec);
     position: absolute;
     bottom: 40px;
+  }
+  @media (max-width: 768px) {
+    display: none;
   }
 `;

@@ -9,6 +9,9 @@ export const HomeWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 1440px) {
+    padding: 0;
+  }
 `;
 
 export const FalseArea = styled.div`
