@@ -7,11 +7,17 @@ import {
 } from "./chatlistsection.styled";
 import Avatar from "@mui/material/Avatar";
 import meImg from "../../../assets/images/me.jpg";
+import { useDispatch } from "react-redux";
+import { openChatArea } from "../../../store/activeChatSlice";
 
 const ChastListItem = () => {
+  const dispatch = useDispatch();
+
+  const handleChatOpen = () => dispatch(openChatArea());
+
   return (
     <>
-      <ChatListItemBlock>
+      <ChatListItemBlock onClick={handleChatOpen}>
         <Avatar
           id="mainAvatar"
           alt="x"

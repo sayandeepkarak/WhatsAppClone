@@ -13,6 +13,7 @@ export const ChatListBlock = styled.div`
     width: 40%;
   }
   @media (max-width: 768px) {
+    display: ${({ chatAreaOpen }) => chatAreaOpen === "true" && "none"};
     width: 100%;
   }
 `;
@@ -62,6 +63,7 @@ export const SearchBox = styled.input.attrs({
   background: transparent;
   border: none;
   outline: none;
+  width: 100%;
   &::placeholder {
     color: var(--icon);
   }
@@ -86,6 +88,7 @@ export const ChatListItemBlock = styled.div`
   justify-content: flex-start;
   gap: 15px;
   cursor: pointer;
+  user-select: none;
   &:hover {
     background-color: var(--list-hover);
   }

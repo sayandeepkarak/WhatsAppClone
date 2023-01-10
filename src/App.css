@@ -20,6 +20,8 @@
   --text-second: #d1d7db;
   --list-active: #2a3942;
   --list-hover: #202c33;
+  --chat-out: #005c4b;
+  --chat-in: #202c33;
 }
 
 ::-webkit-scrollbar {

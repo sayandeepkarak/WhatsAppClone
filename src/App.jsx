@@ -8,6 +8,7 @@ import Home from "./view/home";
 const App = () => {
   const render = useRef(true);
   const [load, setLoad] = useState(true);
+
   useEffect(() => {
     if (!render.current) return;
     setTimeout(() => {
@@ -15,6 +16,7 @@ const App = () => {
     }, 3000);
     render.current = false;
   }, []);
+
   return (
     <>
       {load ? (
