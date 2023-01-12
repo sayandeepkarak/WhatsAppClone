@@ -104,6 +104,9 @@ export const AuthForm = styled.form.attrs({ autoComplete: "off" })`
   align-items: center;
   justify-content: center;
   gap: 24px;
+  input[type="file"] {
+    display: none;
+  }
 `;
 
 export const FormLabel = styled.label`
@@ -195,4 +198,23 @@ export const AuthOptionText = styled.button.attrs({
   cursor: pointer;
   border: none;
   background: transparent;
+`;
+
+export const ImageUpload = styled.div`
+  border-radius: 50%;
+  background-color: rgb(233 237 239 / 69%);
+  color: var(--icon);
+  height: 90px;
+  width: 90px;
+  label {
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    place-items: center;
+  }
+  svg {
+    width: 35px;
+    height: 35px;
+  }
 `;

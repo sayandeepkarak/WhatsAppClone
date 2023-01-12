@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import axiosInstance from "../../modules/Axios";
 import {
   AuthForm,
   AuthInfoText,
@@ -7,7 +8,7 @@ import {
   OtpTextBox,
 } from "./auth.styled";
 
-const OtpForm = ({ email, restartProcess, openLoader, closeLoader }) => {
+const OtpForm = ({ email, chnageForm, openLoader, closeLoader }) => {
   const otp = useRef();
   const [state, setstate] = useState({
     errorText: "Enter 6-digit code",
@@ -19,14 +20,27 @@ const OtpForm = ({ email, restartProcess, openLoader, closeLoader }) => {
   });
 
   const handleChange = () => {
-    if (otp.current.value.length < 6) return;
-    if (/^([0-9]){6}$/.test(otp.current.value)) {
+    const otpVal = otp.current.value;
+    if (otpVal.length < 6) return;
+    const validInput = /^([0-9]){6}$/.test(otpVal);
+    if (validInput) {
       setstate({ ...state, errorText: "Enter 6-digit code" });
       openLoader("Verifying otp...");
-      setTimeout(() => {
-        closeLoader();
-        otp.current.value = "";
-      }, 3000);
+      axiosInstance
+        .post("/api/verifyOtp", {
+          email: email,
+          otp: otpVal,
+        })
+        .then((res) => {
+          chnageForm((old) => ({ ...old, state: "details" }));
+        })
+        .catch((error) => {
+          setstate({ ...state, errorText: error.response.data.error.message });
+        })
+        .finally(() => {
+          closeLoader();
+          otp.current.value = "";
+        });
     } else {
       setstate({ ...state, errorText: "Invalid otp" });
     }
@@ -60,7 +74,7 @@ const OtpForm = ({ email, restartProcess, openLoader, closeLoader }) => {
     }, 3000);
   };
 
-  const handleRestart = () => restartProcess({ state: true, email: "" });
+  const handleRestart = () => chnageForm({ state: "email", email: "" });
 
   return (
     <>

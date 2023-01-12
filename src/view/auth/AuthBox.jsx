@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import LoadModal from "../../components/LoadModal";
 import { AuthBoxArea, AuthBoxBlock, HeadText } from "./auth.styled";
+import Details from "./Details";
 import EmailForm from "./EmailForm";
 import OtpForm from "./OtpForm";
 
 const AuthBox = () => {
-  const [emailForm, setEmailForm] = useState({
-    state: true,
+  const [formState, setFormState] = useState({
+    state: "email",
     email: "",
   });
   const [loader, setLoader] = useState({
@@ -22,23 +23,25 @@ const AuthBox = () => {
       <AuthBoxBlock>
         <AuthBoxArea>
           <HeadText>welcome to whatsappclone</HeadText>
-          {emailForm.state ? (
+          {formState.state === "email" && (
             <>
               <EmailForm
                 handleOpenLoader={setLoader}
-                turnOffForm={setEmailForm}
+                chnageForm={setFormState}
               />
             </>
-          ) : (
+          )}
+          {formState.state === "otp" && (
             <>
               <OtpForm
-                email={emailForm.email}
-                restartProcess={setEmailForm}
+                email={formState.email}
+                chnageForm={setFormState}
                 openLoader={handleOpenLoader}
                 closeLoader={handleCloseLoader}
               />
             </>
           )}
+          {formState.state === "details" && <Details />}
         </AuthBoxArea>
       </AuthBoxBlock>
 

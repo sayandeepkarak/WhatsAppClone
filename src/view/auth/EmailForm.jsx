@@ -1,5 +1,5 @@
-import { useFormik } from "formik";
 import React from "react";
+import { useFormik } from "formik";
 import { emailSchema } from "../../schema";
 import {
   AuthForm,
@@ -8,26 +8,36 @@ import {
   FormLabel,
   ThemeButton,
 } from "./auth.styled";
+import axiosInstance from "../../modules/Axios";
 
-const EmailForm = ({ handleOpenLoader, turnOffForm }) => {
+const EmailForm = ({ handleOpenLoader, chnageForm }) => {
   const { values, handleChange, errors, touched, handleSubmit, handleBlur } =
     useFormik({
       initialValues: {
         email: "",
       },
       validationSchema: emailSchema,
-      onSubmit: (value) => {
+      onSubmit: async (value) => {
         handleOpenLoader({
           open: true,
           text: "Connecting...",
         });
-        setTimeout(() => {
-          handleOpenLoader({
-            open: false,
-            text: "",
+        axiosInstance
+          .post("api/sendOtp", {
+            email: value.email,
+          })
+          .then((res) => {
+            chnageForm({ state: "otp", email: value.email });
+          })
+          .catch((error) => {
+            console.log(error.response.data.error.message);
+          })
+          .finally(() => {
+            handleOpenLoader({
+              open: false,
+              text: "",
+            });
           });
-          turnOffForm({ state: false, email: value.email });
-        }, 3000);
       },
     });
   return (

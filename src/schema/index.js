@@ -6,3 +6,7 @@ export const emailSchema = yup.object({
     .email("Please provide a valid email")
     .required("Please enter your email"),
 });
+
+export const userDetailsSchema = yup.object({
+  fullName: yup.string().min(3).max(20).required("Please enter your name"),
+});

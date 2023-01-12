@@ -45,7 +45,11 @@ const ChatSend = () => {
         anchorEl={anchorEl}
         onClose={handleClose}
       >
-        <EmojiPicker onEmojiClick={handleTypeEmoji} theme="dark" />
+        <EmojiPicker
+          onEmojiClick={handleTypeEmoji}
+          autoFocusSearch={false}
+          theme="dark"
+        />
       </EmojiPopover>
     </>
   );
