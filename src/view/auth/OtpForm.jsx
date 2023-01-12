@@ -74,7 +74,18 @@ const OtpForm = ({ email, chnageForm, openLoader, closeLoader }) => {
     }, 3000);
   };
 
-  const handleRestart = () => chnageForm({ state: "email", email: "" });
+  const handleRestart = () => {
+    axiosInstance
+      .delete("/api/deleteOtp", {
+        data: { email },
+      })
+      .then(() => {
+        chnageForm({ state: "email", email: "" });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <>
