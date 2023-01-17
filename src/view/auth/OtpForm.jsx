@@ -7,9 +7,12 @@ import {
   FormLabel,
   OtpTextBox,
 } from "./auth.styled";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const OtpForm = ({ email, chnageForm, openLoader, closeLoader }) => {
   const otp = useRef();
+  const navigate = useNavigate();
   const [state, setstate] = useState({
     errorText: "Enter 6-digit code",
     resendButton: {
@@ -19,34 +22,34 @@ const OtpForm = ({ email, chnageForm, openLoader, closeLoader }) => {
     counter: 0,
   });
 
-  const handleChange = () => {
+  const handleChange = async () => {
     const otpVal = otp.current.value;
     if (otpVal.length < 6) return;
     const validInput = /^([0-9]){6}$/.test(otpVal);
-    if (validInput) {
-      setstate({ ...state, errorText: "Enter 6-digit code" });
-      openLoader("Verifying otp...");
-      axiosInstance
-        .post("/api/verifyOtp", {
-          email: email,
-          otp: otpVal,
-        })
-        .then((res) => {
-          chnageForm((old) => ({ ...old, state: "details" }));
-        })
-        .catch((error) => {
-          setstate({ ...state, errorText: error.response.data.error.message });
-        })
-        .finally(() => {
-          closeLoader();
-          otp.current.value = "";
-        });
-    } else {
-      setstate({ ...state, errorText: "Invalid otp" });
+    if (!validInput) {
+      return setstate({ ...state, errorText: "Invalid otp" });
+    }
+    setstate({ ...state, errorText: "Enter 6-digit code" });
+    openLoader("Verifying otp...");
+    try {
+      const res = await axiosInstance.post("/api/verifyOtp", {
+        email: email,
+        otp: otpVal,
+      });
+      if (!res.data.isComplete) {
+        return chnageForm((old) => ({ ...old, state: "details" }));
+      }
+      Cookies.set("refresh-key", res.data.refreshToken, { path: "/" });
+      navigate("/");
+    } catch (error) {
+      setstate({ ...state, errorText: error.response.data.error.message });
+    } finally {
+      closeLoader();
+      otp.current.value = "";
     }
   };
 
-  const handleResend = () => {
+  const handleResend = async () => {
     let n = 60;
     setstate({
       ...state,
@@ -54,8 +57,8 @@ const OtpForm = ({ email, chnageForm, openLoader, closeLoader }) => {
       counter: n,
     });
     openLoader("Resending otp...");
-    setTimeout(() => {
-      closeLoader();
+    try {
+      await axiosInstance.post("api/sendOtp", { email });
       const interval = setInterval(() => {
         n--;
         setstate({
@@ -71,20 +74,22 @@ const OtpForm = ({ email, chnageForm, openLoader, closeLoader }) => {
           clearInterval(interval);
         }
       }, 1000);
-    }, 3000);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      closeLoader();
+    }
   };
 
-  const handleRestart = () => {
-    axiosInstance
-      .delete("/api/deleteOtp", {
+  const handleRestart = async () => {
+    try {
+      await axiosInstance.delete("/api/deleteOtp", {
         data: { email },
-      })
-      .then(() => {
-        chnageForm({ state: "email", email: "" });
-      })
-      .catch((err) => {
-        console.log(err);
       });
+      chnageForm({ state: "email", email: "" });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

@@ -26,7 +26,8 @@ const AuthBox = () => {
           {formState.state === "email" && (
             <>
               <EmailForm
-                handleOpenLoader={setLoader}
+                openLoader={handleOpenLoader}
+                closeLoader={handleCloseLoader}
                 chnageForm={setFormState}
               />
             </>
@@ -41,7 +42,13 @@ const AuthBox = () => {
               />
             </>
           )}
-          {formState.state === "details" && <Details />}
+          {formState.state === "details" && (
+            <Details
+              email={formState.email}
+              openLoader={handleOpenLoader}
+              closeLoader={handleCloseLoader}
+            />
+          )}
         </AuthBoxArea>
       </AuthBoxBlock>
 

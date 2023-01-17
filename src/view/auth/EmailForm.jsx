@@ -10,7 +10,7 @@ import {
 } from "./auth.styled";
 import axiosInstance from "../../modules/Axios";
 
-const EmailForm = ({ handleOpenLoader, chnageForm }) => {
+const EmailForm = ({ openLoader, closeLoader, chnageForm }) => {
   const { values, handleChange, errors, touched, handleSubmit, handleBlur } =
     useFormik({
       initialValues: {
@@ -18,26 +18,15 @@ const EmailForm = ({ handleOpenLoader, chnageForm }) => {
       },
       validationSchema: emailSchema,
       onSubmit: async (value) => {
-        handleOpenLoader({
-          open: true,
-          text: "Connecting...",
-        });
-        axiosInstance
-          .post("api/sendOtp", {
-            email: value.email,
-          })
-          .then((res) => {
-            chnageForm({ state: "otp", email: value.email });
-          })
-          .catch((error) => {
-            console.log(error.response.data.error.message);
-          })
-          .finally(() => {
-            handleOpenLoader({
-              open: false,
-              text: "",
-            });
-          });
+        openLoader("Connecting...");
+        try {
+          await axiosInstance.post("api/sendOtp", { email: value.email });
+          chnageForm({ state: "otp", email: value.email });
+        } catch (error) {
+          console.log(error.response.data.error.message);
+        } finally {
+          closeLoader();
+        }
       },
     });
   return (
