@@ -33,7 +33,8 @@ export const AuthLogoBlock = styled.div`
     margin: 22px 36px 28px;
   }
   @media (max-width: 650px) {
-    margin: 18px 28px;
+    margin: 11px 16px;
+    gap: 5px;
   }
 `;
 
@@ -41,6 +42,9 @@ export const Logo = styled.img.attrs({
   alt: "x",
 })`
   height: 50px;
+  @media (max-width: 650px) {
+    height: 45px;
+  }
 `;
 
 export const AuthBoxBlock = styled.div`
@@ -57,7 +61,7 @@ export const AuthBoxBlock = styled.div`
     padding-top: 100px;
   }
   @media (max-width: 650px) {
-    padding-top: 85px;
+    padding-top: 66px;
   }
   @media (max-width: 340px) {
     width: 340px;
@@ -78,7 +82,7 @@ export const AuthBoxArea = styled.div`
   @media (max-width: 650px) {
     margin: 0;
     padding: 50px 10px;
-    height: calc(100vh - 85px);
+    height: calc(100vh - 66px);
   }
 `;
 
@@ -104,9 +108,6 @@ export const AuthForm = styled.form.attrs({ autoComplete: "off" })`
   align-items: center;
   justify-content: center;
   gap: 24px;
-  input[type="file"] {
-    display: none;
-  }
 `;
 
 export const FormLabel = styled.label`
@@ -155,6 +156,10 @@ export const ThemeButton = styled(Button).attrs({
     "&: hover": {
       backgroundColor: "var(--teal)",
     },
+    "@media(max-width:650px)": {
+      position: "absolute",
+      bottom: "55px",
+    },
   },
 })``;
 
@@ -202,6 +207,7 @@ export const AuthOptionText = styled.button.attrs({
 
 export const ImageUpload = styled.div`
   border-radius: 50%;
+  overflow: hidden;
   background-color: rgb(233 237 239 / 69%);
   color: var(--icon);
   height: 90px;
@@ -210,8 +216,12 @@ export const ImageUpload = styled.div`
     cursor: pointer;
     height: 100%;
     width: 100%;
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      height: 95px;
+    }
   }
   svg {
     width: 35px;

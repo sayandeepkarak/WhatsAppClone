@@ -49,7 +49,7 @@ export const SearchBarArea = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 30px;
+  gap: 17px;
   svg {
     font-size: 20px;
   }
