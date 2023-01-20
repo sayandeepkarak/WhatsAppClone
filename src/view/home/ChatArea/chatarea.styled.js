@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Popover from "@mui/material/Popover";
 import IconButton from "@mui/material/IconButton";
+import { motion } from "framer-motion";
 
 export const ChatAreaBlock = styled.div`
   height: 100%;
@@ -30,21 +31,7 @@ export const DefaultAreaBlock = styled.div`
     width: 100%;
     background-color: var(--teal);
   }
-  img {
-    height: 250px;
-  }
-  p {
-    color: var(--text-low-light);
-    font-size: 28px;
-    font-weight: 200;
-    margin: 30px 0 14px 0;
-  }
-  span {
-    color: var(--text-low-sec);
-    font-size: 13px;
-    text-align: center;
-    letter-spacing: 0.1px;
-  }
+
   span#lock-icon-text {
     display: flex;
     font-size: 13px;
@@ -58,6 +45,31 @@ export const DefaultAreaBlock = styled.div`
     display: none;
   }
 `;
+
+export const DefaultTextArea = styled(motion.div).attrs({
+  initial: { opacity: 0, y: 20 },
+  animate: { y: 0, opacity: 1 },
+  transition: { type: "tween", delay: 0.6, duration: 0.4 },
+})`
+  text-align: center;
+  p {
+    color: var(--text-low-light);
+    font-size: 28px;
+    font-weight: 200;
+    margin: 30px 0 14px 0;
+  }
+  span {
+    color: var(--text-low-sec);
+    font-size: 13px;
+    letter-spacing: 0.1px;
+  }
+`;
+
+export const DefaultImage = styled(motion.img).attrs({
+  initial: { height: "0px" },
+  animate: { height: "250px" },
+  transition: { type: "tween", delay: 0.6, duration: 0.4 },
+})``;
 
 export const ChatBlock = styled.div`
   display: flex;

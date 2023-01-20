@@ -1,6 +1,9 @@
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
-export const LoadScreenArea = styled.div`
+export const LoadScreenArea = styled(motion.div).attrs({
+  transition: { type: "tween" },
+})`
   height: 100vh;
   width: 100%;
   background-color: var(--dark);

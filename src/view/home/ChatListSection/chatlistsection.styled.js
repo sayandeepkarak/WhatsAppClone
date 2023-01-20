@@ -52,6 +52,7 @@ export const SearchBarArea = styled.div`
   gap: 17px;
   svg {
     font-size: 20px;
+    cursor: pointer;
   }
 `;
 

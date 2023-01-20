@@ -16,6 +16,7 @@ export const ModalBox = styled.div`
   align-items: center;
   padding: 0 35px;
   gap: 20px;
+  transition: all 0.2s linear;
   p {
     color: #ffffff;
   }

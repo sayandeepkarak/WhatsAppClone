@@ -1,16 +1,21 @@
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
-export const HomeWrapper = styled.div`
+export const HomeWrapper = styled(motion.div).attrs({
+  animate: {
+    padding: "15px 20px",
+    transition: { type: "tween" },
+  },
+})`
   position: relative;
   max-height: 100vh;
   height: 100vh;
   background-color: var(--dark);
-  padding: 15px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   @media (max-width: 1440px) {
-    padding: 0;
+    padding: 0 !important;
   }
 `;
 
