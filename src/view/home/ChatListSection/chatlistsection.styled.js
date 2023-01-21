@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import IconButton from "@mui/material/IconButton";
+import { motion } from "framer-motion";
 
 export const ChatListBlock = styled.div`
   height: 100%;
@@ -52,6 +53,7 @@ export const SearchBarArea = styled.div`
   gap: 17px;
   svg {
     font-size: 20px;
+    cursor: pointer;
   }
 `;
 
@@ -127,4 +129,95 @@ export const ElipsisText = styled.p`
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+`;
+
+export const SlideBlockArea = styled(motion.div).attrs({
+  initial: {
+    opacity: 0.1,
+    x: -100,
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+  },
+  transition: {
+    type: "tween",
+    duration: 0.3,
+  },
+})`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+export const SlideBlockHead = styled.div`
+  width: 100%;
+  min-height: 110px;
+  background-color: var(--chat-dark);
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: 50px 16px 0px;
+  padding-top: auto;
+  gap: 20px;
+  button {
+    color: var(--text-light);
+  }
+  p {
+    color: var(--text-light);
+    font-size: 18px;
+    font-weight: 500;
+  }
+`;
+
+export const ProfileImageArea = styled(motion.div).attrs({})`
+  height: 200px;
+  display: grid;
+  place-items: center;
+  margin: 25px 0px;
+  cursor: pointer;
+`;
+
+export const ProfileImage = styled(motion.img).attrs({
+  initial: { height: "40px", opacity: 0 },
+  animate: {
+    height: "200px",
+    opacity: 1,
+  },
+  transition: {
+    type: "tween",
+    delay: 0.2,
+  },
+})`
+  border-radius: 50%;
+`;
+
+export const ProfileDetailsBlock = styled(motion.div).attrs({
+  initial: {
+    y: -50,
+    opacity: 0,
+  },
+  animate: { y: 0, opacity: 1 },
+  transition: {
+    type: "tween",
+    delay: 0.4,
+  },
+})`
+  width: 100%;
+  padding: 15px 25px;
+  display: flex;
+  flex-direction: column;
+  margin: 0px 5px;
+  gap: 20px;
+  box-shadow: 0 2px 4px var(--bottom-shadow);
+  p {
+    color: var(--teal);
+    font-size: 14px;
+  }
+  span {
+    color: var(--text-light);
+  }
 `;

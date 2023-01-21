@@ -17,6 +17,7 @@ const Home = () => {
 
   useEffect(() => {
     if (!render.current) return;
+    console.log("hello");
     const getUserData = async () => {
       const refreshToken = Cookies.get("refresh-key");
       !refreshToken && navigate("/authentication");
@@ -42,7 +43,7 @@ const Home = () => {
     };
     getUserData();
     render.current = false;
-    setLoad(false);
+    setTimeout(() => setLoad(false), 2000);
   }, [navigate, dispatch]);
 
   return (
