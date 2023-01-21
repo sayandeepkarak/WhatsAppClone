@@ -13,13 +13,13 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useDispatch } from "react-redux";
 import { closeChatArea } from "../../../store/activeChatSlice";
 
-const ActiveChatBlock = () => {
+const ActiveChatBlock = ({ openFriend }) => {
   const dispatch = useDispatch();
   const handleCloseChat = () => dispatch(closeChatArea());
 
   return (
     <>
-      <ChatBlock>
+      <ChatBlock openFriend={true}>
         <MiniBlocks>
           <RoundedButtonMobile onClick={handleCloseChat}>
             <ArrowBackIcon />
@@ -29,8 +29,9 @@ const ActiveChatBlock = () => {
             alt="x"
             src={meImg}
             sx={{ cursor: "pointer" }}
+            onClick={openFriend}
           />
-          <ChatHeadTextArea>
+          <ChatHeadTextArea onClick={openFriend}>
             <p id="chatName">Clear Chat King</p>
             <p id="chatStatus">Online</p>
           </ChatHeadTextArea>

@@ -2,10 +2,12 @@ import styled from "styled-components";
 import Popover from "@mui/material/Popover";
 import IconButton from "@mui/material/IconButton";
 import { motion } from "framer-motion";
+import Button from "@mui/material/Button";
 
 export const ChatAreaBlock = styled.div`
   height: 100%;
   width: 70%;
+  display: flex;
   @media (max-width: 1200px) {
     width: 60%;
   }
@@ -23,6 +25,7 @@ export const DefaultAreaBlock = styled.div`
   flex-direction: column;
   background-color: var(--chat-dark);
   height: 100%;
+  width: 100%;
   &::after {
     content: "";
     position: absolute;
@@ -77,6 +80,9 @@ export const ChatBlock = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   height: 100%;
+  @media (max-width: 1200px) {
+    ${({ openFriend }) => openFriend && "display:none"}
+  }
 `;
 
 export const MiniBlocks = styled.div`
@@ -101,6 +107,7 @@ export const ChatHeadTextArea = styled.div`
   flex-direction: column;
   margin-left: 10px;
   user-select: none;
+  cursor: pointer;
   p#chatName {
     color: #fff;
     font-weight: 400;
@@ -164,4 +171,94 @@ export const RoundedButtonMobile = styled(RoundedButton).attrs({
       display: "none",
     },
   },
+})``;
+
+export const FriendArea = styled(motion.div).attrs({
+  initial: {
+    opacity: 0,
+    x: 150,
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+    borderLeft: "1px solid var(--text-dark)",
+  },
+  transition: {
+    type: "tween",
+    duration: 0.2,
+  },
+})`
+  height: 100%;
+  width: 170%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  /* border-left: 1px solid var(--text-dark); */
+`;
+
+export const FriendHead = styled.div`
+  width: 100%;
+  min-height: 60px;
+  background-color: var(--chat-dark);
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: 0px 16px;
+  padding-top: auto;
+  gap: 20px;
+  button {
+    color: var(--text-light);
+  }
+  p {
+    color: var(--text-light);
+    font-size: 18px;
+    font-weight: 500;
+  }
+`;
+
+export const FriendBody = styled(motion.div).attrs({
+  initial: {
+    opacity: 0,
+    y: -15,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+  transition: {
+    type: "tween",
+    duration: 0.2,
+    delay: 0.3,
+  },
+})`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 25px 0px;
+  border-bottom: 5px solid var(--bottom-shadow);
+  img {
+    height: 200px;
+    border-radius: 50%;
+  }
+  p {
+    font-size: 24px;
+    color: var(--text-light);
+  }
+`;
+
+export const DeleteButton = styled(Button).attrs({
+  color: "error",
+  sx: {
+    textTransform: "none",
+    marginTop: "auto",
+    gap: "15px",
+    fontSize: "18px",
+    height: "50px",
+    width: "100%",
+  },
+  // variant: "",
 })``;

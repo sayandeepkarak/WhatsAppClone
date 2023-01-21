@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { SearchBarArea, SearchBox } from "./chatlistsection.styled";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -6,17 +6,15 @@ import { motion } from "framer-motion";
 
 const SearchBar = () => {
   const [icons, setIcon] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  const searchRef = useRef(null);
 
   const handleReset = () => {
-    setSearchText("");
+    searchRef.current.value = "";
     setIcon(false);
   };
 
-  const handleInput = (e) => {
-    setSearchText(e.target.value);
-    setIcon(true);
-  };
+  const handleFocus = () => searchRef.current.focus();
+  const handleInput = () => setIcon(Boolean(searchRef.current.value));
 
   return (
     <>
@@ -50,9 +48,10 @@ const SearchBar = () => {
             animate={{
               rotate: 0,
             }}
+            onClick={handleFocus}
           />
         )}
-        <SearchBox value={searchText} onChange={handleInput} />
+        <SearchBox ref={searchRef} onChange={handleInput} />
       </SearchBarArea>
     </>
   );

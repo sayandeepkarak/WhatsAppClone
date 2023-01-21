@@ -8,12 +8,15 @@ import Cookies from "js-cookie";
 import axiosInstance from "../../../modules/Axios";
 import { useSelector } from "react-redux";
 
-const HeadSection = () => {
+const HeadSection = ({ setList }) => {
   const userData = useSelector((state) => state.userData.value);
   const navigate = useNavigate();
   const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${String(
     userData.photoUrl
   ).replace("\\", "/")}`;
+
+  const handleOpenProfile = () => setList("profile");
+  const handleOpenNewChat = () => setList("newchat");
 
   const handleLogout = async () => {
     try {
@@ -43,7 +46,7 @@ const HeadSection = () => {
   return (
     <>
       <HeadSectionArea>
-        <span>
+        <span onClick={handleOpenProfile}>
           <Avatar
             id="mainAvatar"
             alt="x"
@@ -51,7 +54,7 @@ const HeadSection = () => {
             sx={{ cursor: "pointer" }}
           />
         </span>
-        <RoundedButton>
+        <RoundedButton onClick={handleOpenNewChat}>
           <ChatIcon />
         </RoundedButton>
         <RoundedButton onClick={handleLogout}>
