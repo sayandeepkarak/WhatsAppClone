@@ -8,6 +8,8 @@ export const ChatAreaBlock = styled.div`
   height: 100%;
   width: 70%;
   display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
   @media (max-width: 1200px) {
     width: 60%;
   }
@@ -80,7 +82,9 @@ export const ChatBlock = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   height: 100%;
+  width: ${({ openFriend }) => (openFriend ? "58%" : "100%")};
   @media (max-width: 1200px) {
+    width: 100%;
     display: ${({ openFriend }) => openFriend && "none"};
   }
 `;
@@ -189,12 +193,14 @@ export const FriendArea = styled(motion.div).attrs({
   },
 })`
   height: 100%;
-  width: 170%;
+  width: 42%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  /* border-left: 1px solid var(--text-dark); */
+  @media (max-width: 1200px) {
+    width: 100%;
+  }
 `;
 
 export const FriendHead = styled.div`
@@ -242,6 +248,7 @@ export const FriendBody = styled(motion.div).attrs({
   border-bottom: 5px solid var(--bottom-shadow);
   img {
     height: 200px;
+    width: 200px;
     border-radius: 50%;
   }
   p {
