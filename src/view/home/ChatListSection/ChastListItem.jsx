@@ -6,7 +6,6 @@ import {
   ListTextArea,
 } from "./chatlistsection.styled";
 import Avatar from "@mui/material/Avatar";
-import meImg from "../../../assets/images/me.jpg";
 import { useDispatch } from "react-redux";
 import { openChatArea } from "../../../store/activeChatSlice";
 
@@ -21,7 +20,7 @@ const ChastListItem = () => {
         <Avatar
           id="mainAvatar"
           alt="x"
-          src={meImg}
+          src=""
           sx={{ cursor: "pointer", width: 45, height: 45 }}
           sizes="large"
         />

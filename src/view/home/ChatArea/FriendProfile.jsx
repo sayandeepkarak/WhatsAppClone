@@ -7,10 +7,11 @@ import {
 } from "./chatarea.styled";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import meImg from "../../../assets/images/me.jpg";
 import DeleteIcon from "@mui/icons-material/Delete";
+import defaultImage from "../../../assets/images/defaultuser.jpg";
 
 const FriendProfile = ({ close }) => {
+  const handleImageError = (e) => (e.target.src = defaultImage);
   return (
     <>
       <FriendArea>
@@ -21,7 +22,7 @@ const FriendProfile = ({ close }) => {
           <p>Clear Chat King</p>
         </FriendHead>
         <FriendBody>
-          <img src={meImg} alt="x" />
+          <img src={""} onError={handleImageError} alt="x" />
           <p>Clear Chat King</p>
         </FriendBody>
         <DeleteButton>

@@ -16,7 +16,7 @@ const ChatArea = () => {
     <>
       <ChatAreaBlock chatAreaOpen={activeChatopen.toString()}>
         {activeChatopen ? (
-          <ActiveChatBlock openFriend={handleOpenFriend} />
+          <ActiveChatBlock openFriend={handleOpenFriend} open={openFriend} />
         ) : (
           <DefaultArea />
         )}

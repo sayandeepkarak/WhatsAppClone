@@ -81,7 +81,7 @@ export const ChatBlock = styled.div`
   align-items: flex-start;
   height: 100%;
   @media (max-width: 1200px) {
-    ${({ openFriend }) => openFriend && "display:none"}
+    display: ${({ openFriend }) => openFriend && "none"};
   }
 `;
 
