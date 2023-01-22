@@ -171,6 +171,10 @@ export const SlideBlockHead = styled.div`
     font-size: 18px;
     font-weight: 500;
   }
+  @media (max-width: 768px) {
+    min-height: 60px;
+    padding: 0px 16px;
+  }
 `;
 
 export const ProfileImageArea = styled(motion.div).attrs({})`
@@ -182,9 +186,10 @@ export const ProfileImageArea = styled(motion.div).attrs({})`
 `;
 
 export const ProfileImage = styled(motion.img).attrs({
-  initial: { height: "40px", opacity: 0 },
+  initial: { height: "40px", width: "40px", opacity: 0 },
   animate: {
     height: "200px",
+    width: "200px",
     opacity: 1,
   },
   transition: {

@@ -30,8 +30,16 @@
   display: none;
 }
 
-@media (max-width: 340px) {
+#root {
+  max-height: 100vh;
+  min-height: 100vh;
+}
+
+@media screen and (max-width: 340px) {
   body {
     min-width: 340px;
+  }
+  #root {
+    max-height: none;
   }
 }

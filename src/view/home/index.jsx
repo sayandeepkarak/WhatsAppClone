@@ -8,6 +8,7 @@ import LoaderScreen from "../../components/Loader";
 import { useDispatch } from "react-redux";
 import axiosInstance from "../../modules/Axios";
 import { setUserData } from "../../store/userDataSlice";
+import getAccessToken from "../../modules/getAccessToken";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -18,17 +19,12 @@ const Home = () => {
   useEffect(() => {
     if (!render.current) return;
     const getUserData = async () => {
-      const refreshToken = Cookies.get("refresh-key");
-      !refreshToken && navigate("/authentication");
       try {
-        const getTokens = await axiosInstance.post("/api/refresh", {
-          refreshToken,
-        });
-        const data = getTokens.data.message;
-        Cookies.set("refresh-key", data.refreshToken, { path: "/" });
+        const accesstoken = await getAccessToken();
+        !accesstoken && navigate("/authentication");
         const res = await axiosInstance.get("/api/userDetails", {
           headers: {
-            Authorization: `Bearer ${data.accessToken}`,
+            Authorization: `Bearer ${accesstoken}`,
           },
         });
         dispatch(setUserData(res.data.userdata));
