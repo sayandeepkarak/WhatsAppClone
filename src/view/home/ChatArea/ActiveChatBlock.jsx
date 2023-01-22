@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import {
   MiniBlocks,
@@ -6,20 +6,19 @@ import {
   ChatHeadTextArea,
   RoundedButtonMobile,
 } from "./chatarea.styled";
-import meImg from "../../../assets/images/me.jpg";
 import Chats from "./Chats";
 import ChatSend from "./ChatSend";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useDispatch } from "react-redux";
 import { closeChatArea } from "../../../store/activeChatSlice";
 
-const ActiveChatBlock = ({ openFriend }) => {
+const ActiveChatBlock = ({ openFriend, open }) => {
   const dispatch = useDispatch();
   const handleCloseChat = () => dispatch(closeChatArea());
 
   return (
     <>
-      <ChatBlock openFriend={true}>
+      <ChatBlock openFriend={open}>
         <MiniBlocks>
           <RoundedButtonMobile onClick={handleCloseChat}>
             <ArrowBackIcon />
@@ -27,7 +26,7 @@ const ActiveChatBlock = ({ openFriend }) => {
           <Avatar
             id="mainAvatar"
             alt="x"
-            src={meImg}
+            src={""}
             sx={{ cursor: "pointer" }}
             onClick={openFriend}
           />

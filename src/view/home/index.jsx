@@ -17,7 +17,6 @@ const Home = () => {
 
   useEffect(() => {
     if (!render.current) return;
-    console.log("hello");
     const getUserData = async () => {
       const refreshToken = Cookies.get("refresh-key");
       !refreshToken && navigate("/authentication");

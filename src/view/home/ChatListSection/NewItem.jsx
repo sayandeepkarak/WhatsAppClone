@@ -4,7 +4,6 @@ import {
   ListDetailsBlock,
   ListTextArea,
 } from "./chatlistsection.styled";
-import meImg from "../../../assets/images/me.jpg";
 import Avatar from "@mui/material/Avatar";
 
 const NewItem = () => {
@@ -14,7 +13,7 @@ const NewItem = () => {
         <Avatar
           id="mainAvatar"
           alt="x"
-          src={meImg}
+          src={""}
           sx={{ cursor: "pointer", width: 45, height: 45 }}
           sizes="large"
         />

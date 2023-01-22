@@ -7,6 +7,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Cookies from "js-cookie";
 import axiosInstance from "../../../modules/Axios";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import defaultImage from "../../../assets/images/defaultuser.jpg";
 
 const HeadSection = ({ setList }) => {
   const userData = useSelector((state) => state.userData.value);
@@ -14,6 +16,9 @@ const HeadSection = ({ setList }) => {
   const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${String(
     userData.photoUrl
   ).replace("\\", "/")}`;
+  const [img, setImg] = useState(photoUrl);
+
+  const handleImageError = () => setImg(defaultImage);
 
   const handleOpenProfile = () => setList("profile");
   const handleOpenNewChat = () => setList("newchat");
@@ -50,7 +55,10 @@ const HeadSection = ({ setList }) => {
           <Avatar
             id="mainAvatar"
             alt="x"
-            src={photoUrl}
+            src={img}
+            imgProps={{
+              onError: handleImageError,
+            }}
             sx={{ cursor: "pointer" }}
           />
         </span>
