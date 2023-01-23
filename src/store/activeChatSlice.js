@@ -4,13 +4,16 @@ const ActiveChatSlice = createSlice({
   name: "activeChat",
   initialState: {
     chatAreaOpen: false,
+    chatData: [],
   },
   reducers: {
     openChatArea(state, action) {
       state.chatAreaOpen = true;
+      state.chatData = action.payload;
     },
     closeChatArea(state, action) {
       state.chatAreaOpen = false;
+      state.chatData = [];
     },
   },
 });

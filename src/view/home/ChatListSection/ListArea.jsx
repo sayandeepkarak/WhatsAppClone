@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../modules/Axios";
@@ -9,11 +9,7 @@ import { ChastListArea } from "./chatlistsection.styled";
 const ListArea = () => {
   const render = useRef(true);
   const navigate = useNavigate();
-
-  const lists = [];
-  for (let i = 0; i < 15; i++) {
-    lists.push(<ChastListItem key={i} />);
-  }
+  const [chats, setChats] = useState([]);
 
   useEffect(() => {
     if (!render.current) return;
@@ -24,7 +20,7 @@ const ListArea = () => {
         const chatRes = await axiosInstance.get("/api/allChats", {
           headers: { Authorization: `Bearer ${accesstoken}` },
         });
-        console.log(chatRes.data);
+        setChats(chatRes.data.data);
       } catch (error) {
         console.log(error);
       }
@@ -32,9 +28,14 @@ const ListArea = () => {
     getAllChats();
     render.current = false;
   }, [navigate]);
+
   return (
     <>
-      <ChastListArea>{lists}</ChastListArea>
+      <ChastListArea>
+        {Array.from(chats).map((e) => {
+          return <ChastListItem key={e._id} data={e} />;
+        })}
+      </ChastListArea>
     </>
   );
 };

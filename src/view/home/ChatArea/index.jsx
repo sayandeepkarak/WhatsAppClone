@@ -7,20 +7,25 @@ import FriendProfile from "./FriendProfile";
 
 const ChatArea = () => {
   const activeChatopen = useSelector((state) => state.activeChat.chatAreaOpen);
-  const [openFriend, setOpenFriend] = useState(false);
+  const [openFriend, setOpenFriend] = useState({ open: false, data: null });
 
-  const handleOpenFriend = () => setOpenFriend(true);
-  const handleCloseFriend = () => setOpenFriend(false);
+  const handleOpenFriend = (data) => setOpenFriend({ open: true, data });
+  const handleCloseFriend = () => setOpenFriend({ open: false, data: null });
 
   return (
     <>
       <ChatAreaBlock chatAreaOpen={activeChatopen.toString()}>
         {activeChatopen ? (
-          <ActiveChatBlock openFriend={handleOpenFriend} open={openFriend} />
+          <ActiveChatBlock
+            openFriend={handleOpenFriend}
+            open={openFriend.open}
+          />
         ) : (
           <DefaultArea />
         )}
-        {openFriend && <FriendProfile close={handleCloseFriend} />}
+        {openFriend.open && (
+          <FriendProfile data={openFriend.data} close={handleCloseFriend} />
+        )}
       </ChatAreaBlock>
     </>
   );

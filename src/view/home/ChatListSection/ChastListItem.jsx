@@ -8,11 +8,21 @@ import {
 import Avatar from "@mui/material/Avatar";
 import { useDispatch } from "react-redux";
 import { openChatArea } from "../../../store/activeChatSlice";
+import { useState } from "react";
 
-const ChastListItem = () => {
+const ChastListItem = ({ data }) => {
+  const { name, photoUrl } = data.users[0];
+  const { chats } = data;
+  const photo = `${process.env.REACT_APP_BACKEND_URL}${String(photoUrl).replace(
+    "\\",
+    "/"
+  )}`;
+
+  const [lastMessage, setLastMessage] = useState("");
+  chats.length > 0 && setLastMessage(chats[chats.length - 1].message);
+
   const dispatch = useDispatch();
-
-  const handleChatOpen = () => dispatch(openChatArea());
+  const handleChatOpen = () => dispatch(openChatArea(data));
 
   return (
     <>
@@ -20,19 +30,15 @@ const ChastListItem = () => {
         <Avatar
           id="mainAvatar"
           alt="x"
-          src=""
+          src={photo}
           sx={{ cursor: "pointer", width: 45, height: 45 }}
           sizes="large"
         />
         <ListDetailsBlock>
           <ListTextArea pos="top">
-            <p className="chatName">Clear Chat King</p>
-            <p className="lasttext">11:55</p>
+            <p className="chatName">{name}</p>
           </ListTextArea>
-          <ElipsisText>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Earum,
-            sint.
-          </ElipsisText>
+          <ElipsisText>{lastMessage}</ElipsisText>
         </ListDetailsBlock>
       </ChatListItemBlock>
     </>
