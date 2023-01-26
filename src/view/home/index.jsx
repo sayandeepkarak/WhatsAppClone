@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ChatArea from "./ChatArea";
 import ChatListSection from "./ChatListSection";
@@ -13,11 +13,9 @@ import getAccessToken from "../../modules/getAccessToken";
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const render = useRef(true);
   const [load, setLoad] = useState(true);
 
   useEffect(() => {
-    if (!render.current) return;
     const getUserData = async () => {
       try {
         const accesstoken = await getAccessToken();
@@ -37,8 +35,20 @@ const Home = () => {
       }
     };
     getUserData();
-    render.current = false;
+    const setactive = setInterval(async () => {
+      const accesstoken = await getAccessToken();
+      if (!accesstoken) {
+        clearInterval(setactive);
+        navigate("/authentication");
+      }
+      await axiosInstance.get("/api/setOnline", {
+        headers: {
+          Authorization: `Bearer ${accesstoken}`,
+        },
+      });
+    }, 3000);
     setTimeout(() => setLoad(false), 2000);
+    return () => clearInterval(setactive);
   }, [navigate, dispatch]);
 
   return (

@@ -11,6 +11,8 @@ import ChatSend from "./ChatSend";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useDispatch, useSelector } from "react-redux";
 import { closeChatArea } from "../../../store/activeChatSlice";
+// import { useEffect } from "react";
+// import axiosInstance from "../../../modules/Axios";
 
 const ActiveChatBlock = ({ openFriend, open }) => {
   const { users } = useSelector((state) => state.activeChat.chatData);
@@ -21,6 +23,18 @@ const ActiveChatBlock = ({ openFriend, open }) => {
   const dispatch = useDispatch();
   const handleCloseChat = () => dispatch(closeChatArea());
   const handleopenFriend = () => openFriend(users[0]);
+
+  // useEffect(() => {
+  //   const isFriendOnline = setInterval(async () => {
+  //     const res = await axiosInstance.get(
+  //       `/api/getOnline?userId=${users[0].userId}`
+  //     );
+  //     console.log(res.data);
+  //     setFriend(true);
+  //     // friendOnline.current = res.data.userActive ? "Online" : "Offline";
+  //   }, 4000);
+  //   return () => clearInterval(isFriendOnline);
+  // }, [users]);
 
   return (
     <>

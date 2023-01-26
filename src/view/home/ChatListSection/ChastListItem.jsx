@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ChatListItemBlock,
   ElipsisText,
@@ -19,7 +19,10 @@ const ChastListItem = ({ data }) => {
   )}`;
 
   const [lastMessage, setLastMessage] = useState("");
-  chats.length > 0 && setLastMessage(chats[chats.length - 1].message);
+
+  useEffect(() => {
+    chats.length > 0 && setLastMessage(chats[chats.length - 1].message);
+  }, [chats]);
 
   const dispatch = useDispatch();
   const handleChatOpen = () => dispatch(openChatArea(data));

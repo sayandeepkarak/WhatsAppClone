@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../modules/Axios";
 import getAccessToken from "../../../modules/getAccessToken";
@@ -7,32 +6,31 @@ import ChastListItem from "./ChastListItem";
 import { ChastListArea } from "./chatlistsection.styled";
 
 const ListArea = () => {
-  const render = useRef(true);
   const navigate = useNavigate();
   const [chats, setChats] = useState([]);
 
   useEffect(() => {
-    if (!render.current) return;
-    const getAllChats = async () => {
+    const getAllChats = setInterval(async () => {
       try {
         const accesstoken = await getAccessToken();
         !accesstoken && navigate("/authentication");
-        const chatRes = await axiosInstance.get("/api/allChats", {
+        const chatRes = await axiosInstance("/api/allChats", {
           headers: { Authorization: `Bearer ${accesstoken}` },
         });
-        setChats(chatRes.data.data);
+        if (chatRes.status !== 204) {
+          setChats(chatRes.data.data);
+        }
       } catch (error) {
         console.log(error);
       }
-    };
-    getAllChats();
-    render.current = false;
+    }, 1000);
+    return () => clearInterval(getAllChats);
   }, [navigate]);
 
   return (
     <>
       <ChastListArea>
-        {Array.from(chats).map((e) => {
+        {chats.map((e) => {
           return <ChastListItem key={e._id} data={e} />;
         })}
       </ChastListArea>
