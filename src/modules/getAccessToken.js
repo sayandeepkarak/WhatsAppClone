@@ -10,7 +10,10 @@ const getAccessToken = async () => {
     refreshToken,
   });
   const data = getTokens.data.message;
-  Cookies.set("refresh-key", data.refreshToken, { path: "/" });
+  Cookies.set("refresh-key", data.refreshToken, {
+    path: "/",
+    expires: 90,
+  });
   return data.accessToken;
 };
 
