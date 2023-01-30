@@ -5,33 +5,43 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import getAccessToken from "../../../../modules/getAccessToken";
 import axiosInstance from "../../../../modules/Axios";
-import { openChatArea } from "../../../../store/activeChatSlice";
-// import { useEffect } from "react";
+import { useSocketContext } from "../../../../context/SocketProvider";
+import { useState } from "react";
 
 const Chats = () => {
-  const { chats, _id } = useSelector((state) => state.activeChat.chatData);
+  const { _id } = useSelector((state) => state.activeChat.value.chatData);
   const userData = useSelector((state) => state.userData.value);
+  const [chats, setChats] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const socket = useSocketContext();
 
   useEffect(() => {
-    const getAllChats = setInterval(async () => {
+    const getChats = async () => {
       try {
         const accesstoken = await getAccessToken();
         !accesstoken && navigate("/authentication");
-        const chatRes = await axiosInstance("/api/allChats", {
+        const chatRes = await axiosInstance("/api/getChat", {
           headers: { Authorization: `Bearer ${accesstoken}` },
           params: { chatId: _id },
         });
         if (chatRes.status !== 204) {
-          dispatch(openChatArea(chatRes.data.data[0]));
+          setChats(chatRes.data.data.chats);
         }
       } catch (error) {
         console.log(error);
       }
-    }, 1000);
-    return () => clearInterval(getAllChats);
-  }, [navigate, dispatch, _id]);
+    };
+    getChats();
+
+    socket.on("chatUpdate", () => {
+      getChats();
+    });
+
+    return () => {
+      socket.off("chatUpdate");
+    };
+  }, [navigate, dispatch, _id, socket]);
 
   return (
     <>

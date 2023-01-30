@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ChatListItemBlock,
   ElipsisText,
@@ -6,26 +6,65 @@ import {
   ListTextArea,
 } from "./chatlistsection.styled";
 import Avatar from "@mui/material/Avatar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openChatArea } from "../../../store/activeChatSlice";
-import { useState } from "react";
+import { useSocketContext } from "../../../context/SocketProvider";
+import axiosInstance from "../../../modules/Axios";
+import getAccessToken from "../../../modules/getAccessToken";
+import { useNavigate } from "react-router-dom";
 
 const ChastListItem = ({ data }) => {
   const { name, photoUrl } = data.users[0];
-  const { chats } = data;
+  const userData = useSelector((state) => state.userData.value);
+  const { chats, _id } = data;
   const photo = `${process.env.REACT_APP_BACKEND_URL}${String(photoUrl).replace(
     "\\",
     "/"
   )}`;
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const socket = useSocketContext();
   const [lastMessage, setLastMessage] = useState("");
 
   useEffect(() => {
-    chats.length > 0 && setLastMessage(chats[chats.length - 1].message);
-  }, [chats]);
+    socket.emit("join-chat-room", _id);
 
-  const dispatch = useDispatch();
-  const handleChatOpen = () => dispatch(openChatArea(data));
+    let interval = setInterval(() => {
+      socket.emit("sendActiveResponse", _id);
+    }, 500);
+
+    socket.on("chatUpdate", () => {
+      console.log("call it");
+      const updateLastMessage = async () => {
+        const accesstoken = await getAccessToken();
+        !accesstoken && navigate("/authentication");
+        try {
+          const lastMessage = await axiosInstance("/api/lastMessage", {
+            headers: { Authorization: `Bearer ${accesstoken}` },
+            params: {
+              chatId: _id,
+            },
+          });
+          setLastMessage(lastMessage.data.data.chats[0].message);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      updateLastMessage();
+    });
+
+    chats.length > 0 && setLastMessage(chats[0].message);
+
+    return () => {
+      clearInterval(interval);
+      socket.off("chatUpdate");
+    };
+  }, [socket, _id, userData._id, chats, navigate]);
+
+  const handleChatOpen = () => {
+    dispatch(openChatArea(data));
+  };
 
   return (
     <>

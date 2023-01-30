@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../../modules/Axios";
-import getAccessToken from "../../../modules/getAccessToken";
 import ChastListItem from "./ChastListItem";
 import { ChastListArea } from "./chatlistsection.styled";
+import getAccessToken from "../../../modules/getAccessToken";
+import axiosInstance from "../../../modules/Axios";
 
 const ListArea = () => {
   const navigate = useNavigate();
   const [chats, setChats] = useState([]);
 
   useEffect(() => {
-    const getAllChats = setInterval(async () => {
+    console.log("call");
+    const getAllChats = async () => {
       try {
         const accesstoken = await getAccessToken();
         !accesstoken && navigate("/authentication");
-        const chatRes = await axiosInstance("/api/allChats", {
+        const chatRes = await axiosInstance("/api/allConnection", {
           headers: { Authorization: `Bearer ${accesstoken}` },
         });
         if (chatRes.status !== 204) {
@@ -23,8 +24,8 @@ const ListArea = () => {
       } catch (error) {
         console.log(error);
       }
-    }, 1000);
-    return () => clearInterval(getAllChats);
+    };
+    getAllChats();
   }, [navigate]);
 
   return (

@@ -10,28 +10,36 @@ import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import SendIcon from "@mui/icons-material/Send";
 import axiosInstance from "../../../modules/Axios";
 import { useSelector } from "react-redux";
+import { useSocketContext } from "../../../context/SocketProvider";
 
 const ChatSend = () => {
   const userData = useSelector((state) => state.userData.value);
-  const { _id } = useSelector((state) => state.activeChat.chatData);
+  const { _id } = useSelector((state) => state.activeChat.value.chatData);
   const [anchorEl, setAnchorEl] = useState(null);
   const [input, setInput] = useState("");
+  const socket = useSocketContext();
 
-  const handleClick = (e) => setAnchorEl(e.currentTarget);
-  const handleClose = () => setAnchorEl(null);
-
-  const handleChange = (e) => setInput(e.target.value);
-  const handleTypeEmoji = ({ emoji }) => setInput(input + emoji);
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleChange = (e) => {
+    setInput(e.target.value);
+  };
+  const handleTypeEmoji = ({ emoji }) => {
+    setInput(input + emoji);
+  };
 
   const handleMessageSend = async () => {
     try {
-      console.log(userData._id);
-      const sendRes = await axiosInstance.post("/api/sendMessage", {
+      await axiosInstance.post("/api/sendMessage", {
         message: input,
         userId: userData._id,
         chatId: _id,
       });
-      console.log(sendRes);
+      socket.emit("chatsend", _id);
     } catch (error) {
       console.log(error);
     } finally {

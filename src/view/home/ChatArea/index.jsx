@@ -6,7 +6,9 @@ import DefaultArea from "./DefaultArea";
 import FriendProfile from "./FriendProfile";
 
 const ChatArea = () => {
-  const activeChatopen = useSelector((state) => state.activeChat.chatAreaOpen);
+  const activeChatopen = useSelector(
+    (state) => state.activeChat.value.chatAreaOpen
+  );
   const [openFriend, setOpenFriend] = useState({ open: false, data: null });
 
   const handleOpenFriend = (data) => setOpenFriend({ open: true, data });

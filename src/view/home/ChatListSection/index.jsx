@@ -9,7 +9,9 @@ import SearchBar from "./SearchBar";
 import SlideBlock from "./SlideBlock";
 
 const ChatListSection = () => {
-  const activeChatopen = useSelector((state) => state.activeChat.chatAreaOpen);
+  const activeChatopen = useSelector(
+    (state) => state.activeChat.value.chatAreaOpen
+  );
   const [listState, setListState] = useState("chatlist");
 
   const handleOpenChatList = () => setListState("chatlist");

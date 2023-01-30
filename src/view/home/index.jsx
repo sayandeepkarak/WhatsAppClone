@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import axiosInstance from "../../modules/Axios";
 import { setUserData } from "../../store/userDataSlice";
 import getAccessToken from "../../modules/getAccessToken";
+import SocketProvider from "../../context/SocketProvider";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -35,35 +36,25 @@ const Home = () => {
       }
     };
     getUserData();
-    const setactive = setInterval(async () => {
-      const accesstoken = await getAccessToken();
-      if (!accesstoken) {
-        clearInterval(setactive);
-        navigate("/authentication");
-      }
-      await axiosInstance.get("/api/setOnline", {
-        headers: {
-          Authorization: `Bearer ${accesstoken}`,
-        },
-      });
-    }, 3000);
+
     setTimeout(() => setLoad(false), 2000);
-    return () => clearInterval(setactive);
   }, [navigate, dispatch]);
 
   return (
     <>
-      {load ? (
-        <LoaderScreen />
-      ) : (
-        <HomeWrapper>
-          <FalseArea></FalseArea>
-          <HomeArea>
-            <ChatListSection />
-            <ChatArea />
-          </HomeArea>
-        </HomeWrapper>
-      )}
+      <SocketProvider>
+        {load ? (
+          <LoaderScreen />
+        ) : (
+          <HomeWrapper>
+            <FalseArea></FalseArea>
+            <HomeArea>
+              <ChatListSection />
+              <ChatArea />
+            </HomeArea>
+          </HomeWrapper>
+        )}
+      </SocketProvider>
     </>
   );
 };

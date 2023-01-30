@@ -3,17 +3,19 @@ const { createSlice } = require("@reduxjs/toolkit");
 const ActiveChatSlice = createSlice({
   name: "activeChat",
   initialState: {
-    chatAreaOpen: false,
-    chatData: [],
+    value: {
+      chatAreaOpen: false,
+      chatData: [],
+    },
   },
   reducers: {
     openChatArea(state, action) {
-      state.chatAreaOpen = true;
-      state.chatData = action.payload;
+      state.value.chatAreaOpen = true;
+      state.value.chatData = action.payload;
     },
     closeChatArea(state, action) {
-      state.chatAreaOpen = false;
-      state.chatData = [];
+      state.value.chatAreaOpen = false;
+      state.value.chatData = [];
     },
   },
 });
