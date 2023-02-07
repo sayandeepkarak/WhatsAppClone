@@ -1,6 +1,5 @@
 import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
 import ChatArea from "./ChatArea";
 import ChatListSection from "./ChatListSection";
 import { FalseArea, HomeArea, HomeWrapper } from "./home.styled";
@@ -8,37 +7,38 @@ import LoaderScreen from "../../components/Loader";
 import { useDispatch } from "react-redux";
 import axiosInstance from "../../modules/Axios";
 import { setUserData } from "../../store/userDataSlice";
-import getAccessToken from "../../modules/getAccessToken";
 import SocketProvider from "../../context/SocketProvider";
+import { setToken } from "../../modules/getAccessToken";
 
 const Home = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [load, setLoad] = useState(true);
+  const render = useRef(true);
 
   useEffect(() => {
+    if (!render) return;
     const getUserData = async () => {
+      let accesstoken = Cookies.get("access-key");
+      if (!accesstoken) {
+        accesstoken = await setToken();
+      }
       try {
-        const accesstoken = await getAccessToken();
-        !accesstoken && navigate("/authentication");
         const res = await axiosInstance.get("/api/userDetails", {
-          headers: {
-            Authorization: `Bearer ${accesstoken}`,
-          },
+          headers: { Authorization: `Bearer ${accesstoken}` },
         });
         dispatch(setUserData(res.data.userdata));
       } catch (error) {
         if (error.response.status === 401) {
-          Cookies.remove("refresh-key");
-          navigate("/authentication");
+          await setToken();
+          getUserData();
         }
-        console.log(error);
       }
     };
     getUserData();
 
     setTimeout(() => setLoad(false), 2000);
-  }, [navigate, dispatch]);
+    render.current = false;
+  }, [dispatch]);
 
   return (
     <>

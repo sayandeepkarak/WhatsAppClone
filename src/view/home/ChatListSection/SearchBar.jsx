@@ -4,17 +4,21 @@ import SearchIcon from "@mui/icons-material/Search";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { motion } from "framer-motion";
 
-const SearchBar = () => {
+const SearchBar = ({ setSearch }) => {
   const [icons, setIcon] = useState(false);
   const searchRef = useRef(null);
 
   const handleReset = () => {
     searchRef.current.value = "";
+    setSearch("");
     setIcon(false);
   };
 
   const handleFocus = () => searchRef.current.focus();
-  const handleInput = () => setIcon(Boolean(searchRef.current.value));
+  const handleInput = () => {
+    setIcon(Boolean(searchRef.current.value));
+    setSearch(searchRef.current.value);
+  };
 
   return (
     <>

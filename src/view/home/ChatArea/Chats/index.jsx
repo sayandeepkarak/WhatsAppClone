@@ -2,34 +2,38 @@ import React, { useEffect } from "react";
 import { ChatRow, ChatsBlock, ChatTexts } from "./chats.styled";
 import bgImage from "../../../../assets/images/chatbg.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import getAccessToken from "../../../../modules/getAccessToken";
+import { setToken } from "../../../../modules/getAccessToken";
 import axiosInstance from "../../../../modules/Axios";
 import { useSocketContext } from "../../../../context/SocketProvider";
-import { useState } from "react";
+import { setActiveChat } from "../../../../store/activeChatSlice";
+import Cookies from "js-cookie";
 
 const Chats = () => {
   const { _id } = useSelector((state) => state.activeChat.value.chatData);
+  const chats = useSelector((state) => state.activeChat.value.chat);
   const userData = useSelector((state) => state.userData.value);
-  const [chats, setChats] = useState([]);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const socket = useSocketContext();
 
   useEffect(() => {
     const getChats = async () => {
+      let accesstoken = Cookies.get("access-key");
+      if (!accesstoken) {
+        accesstoken = await setToken();
+      }
       try {
-        const accesstoken = await getAccessToken();
-        !accesstoken && navigate("/authentication");
         const chatRes = await axiosInstance("/api/getChat", {
           headers: { Authorization: `Bearer ${accesstoken}` },
           params: { chatId: _id },
         });
         if (chatRes.status !== 204) {
-          setChats(chatRes.data.data.chats);
+          dispatch(setActiveChat(chatRes.data.data.chats));
         }
       } catch (error) {
-        console.log(error);
+        if (error.response.status === 401) {
+          await setToken();
+          getChats();
+        }
       }
     };
     getChats();
@@ -41,7 +45,7 @@ const Chats = () => {
     return () => {
       socket.off("chatUpdate");
     };
-  }, [navigate, dispatch, _id, socket]);
+  }, [dispatch, _id, socket]);
 
   return (
     <>
