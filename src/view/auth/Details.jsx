@@ -41,7 +41,16 @@ const Details = ({ email, openLoader, closeLoader }) => {
             },
           }
         );
-        Cookies.set("refresh-key", res.data.refreshToken, { path: "/" });
+        const date = new Date();
+        date.setMinutes(date.getMinutes() + 1);
+        Cookies.set("refresh-key", res.data.refreshToken, {
+          path: "/",
+          expires: 90,
+        });
+        Cookies.set("access-key", res.data.accessToken, {
+          path: "/",
+          expires: date,
+        });
         navigate("/");
       } catch (error) {
         console.log(error);

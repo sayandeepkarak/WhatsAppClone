@@ -9,6 +9,7 @@ import axiosInstance from "../../../modules/Axios";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import defaultImage from "../../../assets/images/defaultuser.jpg";
+import { setToken } from "../../../modules/getAccessToken";
 
 const HeadSection = ({ setList }) => {
   const userData = useSelector((state) => state.userData.value);
@@ -18,33 +19,41 @@ const HeadSection = ({ setList }) => {
   ).replace("\\", "/")}`;
   const [img, setImg] = useState(photoUrl);
 
-  const handleImageError = () => setImg(defaultImage);
+  const handleImageError = () => {
+    setImg(defaultImage);
+  };
 
-  const handleOpenProfile = () => setList("profile");
-  const handleOpenNewChat = () => setList("newchat");
+  const handleOpenProfile = () => {
+    setList("profile");
+  };
+  const handleOpenNewChat = () => {
+    setList("newchat");
+  };
 
   const handleLogout = async () => {
+    let accesstoken = Cookies.get("access-key");
+    if (!accesstoken) {
+      accesstoken = await setToken();
+    }
     try {
       const refreshToken = Cookies.get("refresh-key");
-      !refreshToken && navigate("/authentication");
-      const getTokens = await axiosInstance.post("/api/refresh", {
-        refreshToken,
-      });
-      const data = getTokens.data.message;
-      Cookies.set("refresh-key", data.refreshToken, { path: "/" });
       await axiosInstance.post(
         "api/logout",
-        { refreshToken: data.refreshToken },
+        { refreshToken },
         {
           headers: {
-            Authorization: `Bearer ${data.accessToken}`,
+            Authorization: `Bearer ${accesstoken}`,
           },
         }
       );
+      Cookies.remove("access-key");
       Cookies.remove("refresh-key");
       navigate("/authentication");
     } catch (error) {
-      console.log(error);
+      if (error.response.status === 401) {
+        await setToken();
+        handleLogout();
+      }
     }
   };
 

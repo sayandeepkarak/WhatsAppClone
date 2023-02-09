@@ -15,11 +15,11 @@ import { useEffect } from "react";
 import { useSocketContext } from "../../../context/SocketProvider";
 
 const ActiveChatBlock = ({ openFriend, open }) => {
-  const { users, _id } = useSelector(
+  const { friend, _id } = useSelector(
     (state) => state.activeChat.value.chatData
   );
   const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${String(
-    users[0].photoUrl
+    friend.photoUrl
   ).replace("\\", "/")}`;
 
   const dispatch = useDispatch();
@@ -29,16 +29,16 @@ const ActiveChatBlock = ({ openFriend, open }) => {
   const handleCloseChat = () => {
     dispatch(closeChatArea());
   };
+
   const handleopenFriend = () => {
-    openFriend(users[0]);
+    openFriend(friend);
   };
 
   useEffect(() => {
-    setUserActive(false);
     socket.emit("join-chat-room", _id);
 
     socket.on("recieveServerResponse", (chatId) => {
-      chatId === _id && setUserActive(true);
+      setUserActive(chatId === _id);
     });
 
     return () => {
@@ -61,7 +61,7 @@ const ActiveChatBlock = ({ openFriend, open }) => {
             onClick={handleopenFriend}
           />
           <ChatHeadTextArea onClick={handleopenFriend}>
-            <p id="chatName">{users[0].name}</p>
+            <p id="chatName">{friend.fullName}</p>
             <p id="chatStatus">{userActive ? "Online" : "Offline"}</p>
           </ChatHeadTextArea>
         </MiniBlocks>

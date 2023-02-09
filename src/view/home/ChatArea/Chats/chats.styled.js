@@ -31,7 +31,8 @@ export const ChatRow = styled.div`
 
 export const ChatTexts = styled.div`
   min-height: 25px;
-  border-radius: 8px;
+  border-radius: ${({ direction }) =>
+    direction === "in" ? "8px 8px 8px 0px" : "8px 8px 0px 8px"};
   display: flex;
   align-items: center;
   word-wrap: break-word;

@@ -1,21 +1,20 @@
 import { useContext, useEffect, useState } from "react";
 import { createContext } from "react";
 import { io } from "socket.io-client";
-import { useNavigate } from "react-router-dom";
-import getAccessToken from "../modules/getAccessToken";
+import { setToken } from "../modules/getAccessToken";
+import Cookies from "js-cookie";
 
 const socketContext = createContext();
 
 const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState();
-  const navigate = useNavigate();
   useEffect(() => {
     const getSocketConnection = async () => {
+      let accesstoken = Cookies.get("access-key");
+      if (!accesstoken) {
+        accesstoken = await setToken();
+      }
       try {
-        const accesstoken = await getAccessToken();
-        if (!accesstoken) {
-          navigate("/authentication");
-        }
         const newSocket = io(process.env.REACT_APP_BACKEND_URL, {
           extraHeaders: {
             authorization: `Bearer ${accesstoken}`,
@@ -30,7 +29,7 @@ const SocketProvider = ({ children }) => {
       }
     };
     getSocketConnection();
-  }, [navigate]);
+  }, []);
 
   return (
     <socketContext.Provider value={socket}>{children}</socketContext.Provider>

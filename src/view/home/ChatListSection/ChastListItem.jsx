@@ -10,11 +10,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { openChatArea } from "../../../store/activeChatSlice";
 import { useSocketContext } from "../../../context/SocketProvider";
 import axiosInstance from "../../../modules/Axios";
-import getAccessToken from "../../../modules/getAccessToken";
-import { useNavigate } from "react-router-dom";
+import { setToken } from "../../../modules/getAccessToken";
+import Cookies from "js-cookie";
 
 const ChastListItem = ({ data }) => {
-  const { name, photoUrl } = data.users[0];
+  const { fullName, photoUrl } = data.friend;
   const userData = useSelector((state) => state.userData.value);
   const { chats, _id } = data;
   const photo = `${process.env.REACT_APP_BACKEND_URL}${String(photoUrl).replace(
@@ -23,7 +23,6 @@ const ChastListItem = ({ data }) => {
   )}`;
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const socket = useSocketContext();
   const [lastMessage, setLastMessage] = useState("");
 
@@ -32,13 +31,14 @@ const ChastListItem = ({ data }) => {
 
     let interval = setInterval(() => {
       socket.emit("sendActiveResponse", _id);
-    }, 500);
+    }, 1000);
 
     socket.on("chatUpdate", () => {
-      console.log("call it");
       const updateLastMessage = async () => {
-        const accesstoken = await getAccessToken();
-        !accesstoken && navigate("/authentication");
+        let accesstoken = Cookies.get("access-key");
+        if (!accesstoken) {
+          accesstoken = await setToken();
+        }
         try {
           const lastMessage = await axiosInstance("/api/lastMessage", {
             headers: { Authorization: `Bearer ${accesstoken}` },
@@ -48,19 +48,20 @@ const ChastListItem = ({ data }) => {
           });
           setLastMessage(lastMessage.data.data.chats[0].message);
         } catch (error) {
-          console.log(error);
+          if (error.response.status === 401) {
+            await setToken();
+            updateLastMessage();
+          }
         }
       };
       updateLastMessage();
     });
-
-    chats.length > 0 && setLastMessage(chats[0].message);
+    chats && setLastMessage(chats.message);
 
     return () => {
       clearInterval(interval);
-      socket.off("chatUpdate");
     };
-  }, [socket, _id, userData._id, chats, navigate]);
+  }, [socket, _id, userData._id, chats]);
 
   const handleChatOpen = () => {
     dispatch(openChatArea(data));
@@ -78,7 +79,7 @@ const ChastListItem = ({ data }) => {
         />
         <ListDetailsBlock>
           <ListTextArea pos="top">
-            <p className="chatName">{name}</p>
+            <p className="chatName">{fullName}</p>
           </ListTextArea>
           <ElipsisText>{lastMessage}</ElipsisText>
         </ListDetailsBlock>

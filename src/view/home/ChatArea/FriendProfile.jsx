@@ -23,11 +23,11 @@ const FriendProfile = ({ close, data }) => {
           <IconButton onClick={close}>
             <CloseIcon />
           </IconButton>
-          <p>{data.name}</p>
+          <p>{data.fullName}</p>
         </FriendHead>
         <FriendBody>
           <img src={photo} onError={handleImageError} alt="x" />
-          <p>{data.name}</p>
+          <p>{data.fullName}</p>
         </FriendBody>
         <DeleteButton>
           <DeleteIcon />

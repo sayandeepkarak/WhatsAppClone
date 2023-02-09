@@ -7,22 +7,27 @@ import {
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 import axiosInstance from "../../../modules/Axios";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
-import getAccessToken from "../../../modules/getAccessToken";
+import { setToken } from "../../../modules/getAccessToken";
+import { useDispatch, useSelector } from "react-redux";
+import { openChatArea } from "../../../store/activeChatSlice";
 
-const NewItem = ({ data }) => {
-  const navigate = useNavigate();
+const NewItem = ({ data, friendsId }) => {
+  const friends = useSelector((state) => state.friends.value);
+  const dispatch = useDispatch();
   const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${String(
     data.photoUrl
   ).replace("\\", "/")}`;
 
   const handleAddPerson = async () => {
+    let accesstoken = Cookies.get("access-key");
+    if (!accesstoken) {
+      accesstoken = await setToken();
+    }
     try {
-      const accesstoken = await getAccessToken();
-      !accesstoken && navigate("/authentication");
-      const res = await axiosInstance.post(
+      await axiosInstance.post(
         "/api/createConnection",
         {
           personId: data._id,
@@ -31,19 +36,26 @@ const NewItem = ({ data }) => {
           headers: { Authorization: `Bearer ${accesstoken}` },
         }
       );
-      console.log(res);
     } catch (error) {
       if (error.response.status === 401) {
-        Cookies.remove("refresh-key");
-        navigate("/authentication");
+        await setToken();
+        handleAddPerson();
       }
-      console.log(error);
+    }
+  };
+
+  const handleClick = () => {
+    if (friendsId.includes(data._id)) {
+      const friendData = friends.find((e) => e.friend._id === data._id);
+      dispatch(openChatArea(friendData));
+    } else {
+      handleAddPerson();
     }
   };
 
   return (
     <>
-      <ChatListItemBlock>
+      <ChatListItemBlock onClick={handleClick}>
         <Avatar
           id="mainAvatar"
           alt="x"
@@ -56,8 +68,8 @@ const NewItem = ({ data }) => {
             <p className="chatName">{data.fullName}</p>
           </ListTextArea>
         </ListDetailsBlock>
-        <IconButton onClick={handleAddPerson} sx={{ color: "#00a884" }}>
-          <PersonAddIcon />
+        <IconButton sx={{ color: "#00a884" }}>
+          {friendsId.includes(data._id) ? <HowToRegIcon /> : <PersonAddIcon />}
         </IconButton>
       </ChatListItemBlock>
     </>

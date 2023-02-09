@@ -39,7 +39,16 @@ const OtpForm = ({ email, chnageForm, openLoader, closeLoader }) => {
       if (!res.data.isComplete) {
         return chnageForm((old) => ({ ...old, state: "details" }));
       }
-      Cookies.set("refresh-key", res.data.refreshToken, { path: "/" });
+      const date = new Date();
+      date.setMinutes(date.getMinutes() + 1);
+      Cookies.set("refresh-key", res.data.refreshToken, {
+        path: "/",
+        expires: 90,
+      });
+      Cookies.set("access-key", res.data.accessToken, {
+        path: "/",
+        expires: date,
+      });
       navigate("/");
     } catch (error) {
       setstate({ ...state, errorText: error.response.data.error.message });

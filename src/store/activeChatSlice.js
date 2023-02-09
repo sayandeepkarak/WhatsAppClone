@@ -6,12 +6,16 @@ const ActiveChatSlice = createSlice({
     value: {
       chatAreaOpen: false,
       chatData: [],
+      chat: [],
     },
   },
   reducers: {
     openChatArea(state, action) {
       state.value.chatAreaOpen = true;
       state.value.chatData = action.payload;
+    },
+    setActiveChat(state, action) {
+      state.value.chat = action.payload;
     },
     closeChatArea(state, action) {
       state.value.chatAreaOpen = false;
@@ -20,5 +24,6 @@ const ActiveChatSlice = createSlice({
   },
 });
 
-export const { openChatArea, closeChatArea } = ActiveChatSlice.actions;
+export const { openChatArea, closeChatArea, setActiveChat } =
+  ActiveChatSlice.actions;
 export default ActiveChatSlice.reducer;

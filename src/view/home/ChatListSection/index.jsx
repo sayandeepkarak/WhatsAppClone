@@ -13,6 +13,7 @@ const ChatListSection = () => {
     (state) => state.activeChat.value.chatAreaOpen
   );
   const [listState, setListState] = useState("chatlist");
+  const [listSearch, setListSearch] = useState("");
 
   const handleOpenChatList = () => setListState("chatlist");
 
@@ -21,8 +22,8 @@ const ChatListSection = () => {
       {listState === "chatlist" && (
         <>
           <HeadSection setList={setListState} />
-          <SearchBar />
-          <ListArea />
+          <SearchBar setSearch={setListSearch} />
+          <ListArea searchTerm={listSearch} />
         </>
       )}
 
