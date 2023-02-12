@@ -267,5 +267,4 @@ export const DeleteButton = styled(Button).attrs({
     height: "50px",
     width: "100%",
   },
-  // variant: "",
 })``;

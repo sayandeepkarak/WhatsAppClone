@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import {
   MiniBlocks,
@@ -6,45 +6,88 @@ import {
   ChatHeadTextArea,
   RoundedButtonMobile,
 } from "./chatarea.styled";
-import Chats from "./Chats";
-import ChatSend from "./ChatSend";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useDispatch, useSelector } from "react-redux";
-import { closeChatArea } from "../../../store/activeChatSlice";
+import { closeChatArea, setActiveChat } from "../../../store/activeChatSlice";
 import { useEffect } from "react";
-import { useSocketContext } from "../../../context/SocketProvider";
+import Cookies from "js-cookie";
+import { setToken } from "../../../modules/getAccessToken";
+import axiosInstance from "../../../modules/Axios";
+import Chats from "./chats";
+import ChatSend from "./ChatSend";
 
-const ActiveChatBlock = ({ openFriend, open }) => {
+const ActiveChatBlock = ({ socket, openFriend, open }) => {
   const { friend, _id } = useSelector(
     (state) => state.activeChat.value.chatData
   );
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.userData.value);
+  const [userActive, setUserActive] = useState(false);
+
   const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${String(
     friend.photoUrl
   ).replace("\\", "/")}`;
 
-  const dispatch = useDispatch();
-  const socket = useSocketContext();
-  const [userActive, setUserActive] = useState(false);
-
   const handleCloseChat = () => {
     dispatch(closeChatArea());
   };
-
   const handleopenFriend = () => {
     openFriend(friend);
   };
 
+  const getAllChats = useCallback(async () => {
+    let accesstoken = Cookies.get("access-key");
+    if (!accesstoken) {
+      accesstoken = await setToken();
+    }
+    try {
+      const chatRes = await axiosInstance("/api/getChat", {
+        headers: { Authorization: `Bearer ${accesstoken}` },
+        params: { chatId: _id },
+      });
+      if (chatRes.status !== 204) {
+        dispatch(setActiveChat(chatRes.data.data.chats));
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        await setToken();
+        getAllChats();
+      }
+    }
+  }, [_id, dispatch]);
+
+  const handleMessageSend = async (message) => {
+    try {
+      await axiosInstance.post("/api/sendMessage", {
+        message,
+        userId: userData._id,
+        chatId: _id,
+      });
+      socket.emit("chatsend", _id, message);
+      getAllChats();
+    } catch (error) {
+      console.log("Error");
+    }
+  };
+
   useEffect(() => {
+    getAllChats();
+
     socket.emit("join-chat-room", _id);
 
-    socket.on("recieveServerResponse", (chatId) => {
-      setUserActive(chatId === _id);
+    socket.on("recieveUserResponse", (chatId) => {
+      chatId === _id && setUserActive(true);
+    });
+
+    socket.on("chatUpdate", (chatId, message) => {
+      chatId === _id && getAllChats();
     });
 
     return () => {
-      socket.off("recieveServerResponse");
+      socket.off("chatUpdate");
+      socket.off("recieveUserResponse");
     };
-  }, [_id, socket]);
+  }, [dispatch, _id, getAllChats, socket]);
 
   return (
     <>
@@ -66,7 +109,7 @@ const ActiveChatBlock = ({ openFriend, open }) => {
           </ChatHeadTextArea>
         </MiniBlocks>
         <Chats />
-        <ChatSend />
+        <ChatSend sendMessage={handleMessageSend} />
       </ChatBlock>
     </>
   );

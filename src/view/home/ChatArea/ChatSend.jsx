@@ -8,20 +8,10 @@ import {
 import EmojiPicker from "emoji-picker-react";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import SendIcon from "@mui/icons-material/Send";
-import axiosInstance from "../../../modules/Axios";
-import { useDispatch, useSelector } from "react-redux";
-import { useSocketContext } from "../../../context/SocketProvider";
-import { setActiveChat } from "../../../store/activeChatSlice";
-import { setToken } from "../../../modules/getAccessToken";
-import Cookies from "js-cookie";
 
-const ChatSend = () => {
-  const userData = useSelector((state) => state.userData.value);
-  const { _id } = useSelector((state) => state.activeChat.value.chatData);
+const ChatSend = ({ sendMessage }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [input, setInput] = useState("");
-  const socket = useSocketContext();
-  const dispatch = useDispatch();
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -36,45 +26,16 @@ const ChatSend = () => {
     setInput(input + emoji);
   };
 
-  const getAllChats = async () => {
-    let accesstoken = Cookies.get("access-key");
-    if (!accesstoken) {
-      accesstoken = await setToken();
-    }
-    try {
-      const chatRes = await axiosInstance("/api/getChat", {
-        headers: { Authorization: `Bearer ${accesstoken}` },
-        params: { chatId: _id },
-      });
-      if (chatRes.status !== 204) {
-        dispatch(setActiveChat(chatRes.data.data.chats));
-      }
-    } catch (error) {
-      if (error.response.status === 401) {
-        await setToken();
-        getAllChats();
-      }
-    }
-  };
-
   const handleMessageSend = async () => {
-    try {
-      await axiosInstance.post("/api/sendMessage", {
-        message: input,
-        userId: userData._id,
-        chatId: _id,
-      });
-      socket.emit("chatsend", _id);
-      getAllChats();
-    } catch (error) {
-      console.log("Error");
-    } finally {
-      setInput("");
-    }
+    sendMessage(input);
+    setInput("");
   };
 
   const handleKeyPress = (e) => {
-    e.key === "Enter" && handleMessageSend();
+    if (e.key === "Enter") {
+      sendMessage(input);
+      setInput("");
+    }
   };
 
   const open = Boolean(anchorEl);

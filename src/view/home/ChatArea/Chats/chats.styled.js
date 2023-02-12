@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-export const ChatsBlock = styled.div`
+export const ChatsBlock = styled.div.attrs({
+  id: "chatsBlock",
+})`
   display: flex;
   height: 100%;
   width: 100%;
@@ -27,6 +29,7 @@ export const ChatRow = styled.div`
   user-select: none;
   justify-content: ${({ direction }) =>
     direction === "in" ? "flex-start" : "flex-end"};
+  transition: all 0.2s linear;
 `;
 
 export const ChatTexts = styled.div`
