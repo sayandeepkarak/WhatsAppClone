@@ -8,7 +8,7 @@ import ProfileSection from "./ProfileSection";
 import SearchBar from "./SearchBar";
 import SlideBlock from "./SlideBlock";
 
-const ChatListSection = () => {
+const ChatListSection = ({ socket }) => {
   const activeChatopen = useSelector(
     (state) => state.activeChat.value.chatAreaOpen
   );
@@ -23,7 +23,7 @@ const ChatListSection = () => {
         <>
           <HeadSection setList={setListState} />
           <SearchBar setSearch={setListSearch} />
-          <ListArea searchTerm={listSearch} />
+          <ListArea socket={socket} searchTerm={listSearch} />
         </>
       )}
 

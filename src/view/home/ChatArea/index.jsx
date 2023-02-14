@@ -5,7 +5,7 @@ import { ChatAreaBlock } from "./chatarea.styled";
 import DefaultArea from "./DefaultArea";
 import FriendProfile from "./FriendProfile";
 
-const ChatArea = () => {
+const ChatArea = ({ socket }) => {
   const activeChatopen = useSelector(
     (state) => state.activeChat.value.chatAreaOpen
   );
@@ -21,6 +21,7 @@ const ChatArea = () => {
           <ActiveChatBlock
             openFriend={handleOpenFriend}
             open={openFriend.open}
+            socket={socket}
           />
         ) : (
           <DefaultArea />

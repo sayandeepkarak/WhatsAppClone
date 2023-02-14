@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useRef } from "react";
 import axiosInstance from "../../../modules/Axios";
 import { ChastListArea } from "./chatlistsection.styled";
 import NewItem from "./NewItem";
@@ -11,16 +10,14 @@ import { BeatLoader } from "react-spinners";
 const NewChat = () => {
   const userData = useSelector((state) => state.userData.value);
   const friends = useSelector((state) => state.friends.value);
-  const render = useRef(true);
   const [friendsId, setFriendsId] = useState([]);
   const [users, setUsers] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [load, setLoad] = useState(true);
 
   useEffect(() => {
-    if (!render.current) return;
     friends.forEach((e) => {
-      setFriendsId([...friendsId, e.friend._id]);
+      setFriendsId((old) => [...old, e.friend._id]);
     });
     const getAllUsers = async () => {
       try {
@@ -33,8 +30,7 @@ const NewChat = () => {
       }
     };
     getAllUsers();
-    render.current = false;
-  }, [setFriendsId, friendsId, friends]);
+  }, [setFriendsId, friends]);
 
   return (
     <>

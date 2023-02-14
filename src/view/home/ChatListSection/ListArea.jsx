@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { setFriends } from "../../../store/friendsSlice";
 
-const ListArea = ({ searchTerm }) => {
+const ListArea = ({ socket, searchTerm }) => {
   const friends = useSelector((state) => state.friends.value);
   const [load, setLoad] = useState(true);
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ const ListArea = ({ searchTerm }) => {
                 .includes(searchTerm.toLowerCase());
             })
             .map((e) => {
-              return <ChastListItem key={e._id} data={e} />;
+              return <ChastListItem key={e._id} data={e} socket={socket} />;
             })}
         </ChastListArea>
       )}
