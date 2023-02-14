@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { setToken } from "../../../modules/getAccessToken";
 import axiosInstance from "../../../modules/Axios";
-import Chats from "./chats";
+import Chats from "./Chats";
 import ChatSend from "./ChatSend";
 
 const ActiveChatBlock = ({ socket, openFriend, open }) => {
