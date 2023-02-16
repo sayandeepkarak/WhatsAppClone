@@ -9,9 +9,7 @@ import defaultImage from "../../../assets/images/defaultuser.jpg";
 
 const ProfileSection = () => {
   const userData = useSelector((state) => state.userData.value);
-  const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${String(
-    userData.photoUrl
-  ).replace("\\", "/")}`;
+  const photoUrl = `${String(userData.photoUrl).replace("\\", "/")}`;
   const handleImageError = (e) => (e.target.src = defaultImage);
 
   return (

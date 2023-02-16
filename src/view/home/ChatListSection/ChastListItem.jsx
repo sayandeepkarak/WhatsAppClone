@@ -12,10 +12,7 @@ import { openChatArea } from "../../../store/activeChatSlice";
 const ChastListItem = ({ socket, data }) => {
   const { fullName, photoUrl } = data.friend;
   const { chats, _id } = data;
-  const photo = `${process.env.REACT_APP_BACKEND_URL}${String(photoUrl).replace(
-    "\\",
-    "/"
-  )}`;
+  const photo = `${String(photoUrl).replace("\\", "/")}`;
 
   const dispatch = useDispatch();
   const [lastMessage, setLastMessage] = useState("");

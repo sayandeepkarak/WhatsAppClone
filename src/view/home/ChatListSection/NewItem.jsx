@@ -17,9 +17,7 @@ import { openChatArea } from "../../../store/activeChatSlice";
 const NewItem = ({ data, friendsId }) => {
   const friends = useSelector((state) => state.friends.value);
   const dispatch = useDispatch();
-  const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${String(
-    data.photoUrl
-  ).replace("\\", "/")}`;
+  const photoUrl = `${String(data.photoUrl).replace("\\", "/")}`;
 
   const handleAddPerson = async () => {
     let accesstoken = Cookies.get("access-key");
