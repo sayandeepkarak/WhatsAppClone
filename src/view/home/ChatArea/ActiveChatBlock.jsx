@@ -24,9 +24,7 @@ const ActiveChatBlock = ({ socket, openFriend, open }) => {
   const userData = useSelector((state) => state.userData.value);
   const [userActive, setUserActive] = useState(false);
 
-  const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${String(
-    friend.photoUrl
-  ).replace("\\", "/")}`;
+  const photoUrl = `${String(friend.photoUrl).replace("\\", "/")}`;
 
   const handleCloseChat = () => {
     dispatch(closeChatArea());
