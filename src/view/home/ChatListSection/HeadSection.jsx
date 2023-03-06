@@ -14,7 +14,7 @@ import { setToken } from "../../../modules/getAccessToken";
 const HeadSection = ({ setList }) => {
   const userData = useSelector((state) => state.userData.value);
   const navigate = useNavigate();
-  const photoUrl = `${String(userData.photoUrl).replace("\\", "/")}`;
+  const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${userData.photoUrl}`;
   const [img, setImg] = useState(photoUrl);
 
   const handleImageError = () => {

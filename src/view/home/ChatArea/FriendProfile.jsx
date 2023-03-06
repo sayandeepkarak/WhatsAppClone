@@ -11,7 +11,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import defaultImage from "../../../assets/images/defaultuser.jpg";
 
 const FriendProfile = ({ close, data }) => {
-  const photo = `${String(data.photoUrl).replace("\\", "/")}`;
+  const photo = `${process.env.REACT_APP_BACKEND_URL}${data.photoUrl}`;
 
   const handleImageError = (e) => (e.target.src = defaultImage);
   return (
