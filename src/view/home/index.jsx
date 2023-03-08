@@ -18,14 +18,12 @@ const Home = () => {
 
   useEffect(() => {
     const getUserData = async () => {
-      let accesstoken = Cookies.get("access-key");
+      const accesstoken = Cookies.get("access-key");
       if (!accesstoken) {
-        accesstoken = await setToken();
+        await setToken();
       }
       try {
-        const res = await axiosInstance.get("/api/userDetails", {
-          headers: { Authorization: `Bearer ${accesstoken}` },
-        });
+        const res = await axiosInstance.get("/api/userDetails");
         dispatch(setUserData(res.data.userdata));
       } catch (error) {
         if (error.response.status === 401) {

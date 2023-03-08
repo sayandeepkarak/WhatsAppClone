@@ -29,21 +29,12 @@ const HeadSection = ({ setList }) => {
   };
 
   const handleLogout = async () => {
-    let accesstoken = Cookies.get("access-key");
+    const accesstoken = Cookies.get("access-key");
     if (!accesstoken) {
-      accesstoken = await setToken();
+      await setToken();
     }
     try {
-      const refreshToken = Cookies.get("refresh-key");
-      await axiosInstance.post(
-        "api/logout",
-        { refreshToken },
-        {
-          headers: {
-            Authorization: `Bearer ${accesstoken}`,
-          },
-        }
-      );
+      await axiosInstance.post("api/logout");
       Cookies.remove("access-key");
       Cookies.remove("refresh-key");
       navigate("/authentication");

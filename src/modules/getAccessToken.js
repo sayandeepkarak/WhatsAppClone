@@ -6,24 +6,8 @@ const setToken = async () => {
   if (!refreshtoken) {
     return (window.location.href = "/authentication");
   }
-
   try {
-    const res = await axiosInstance.post("/api/refresh", {
-      refreshToken: refreshtoken,
-    });
-    const { refreshToken, accessToken } = res.data.message;
-    const date = new Date();
-    date.setMinutes(date.getMinutes() + 1);
-
-    Cookies.set("refresh-key", refreshToken, {
-      path: "/",
-      expires: 90,
-    });
-    Cookies.set("access-key", accessToken, {
-      path: "/",
-      expires: date,
-    });
-    return accessToken;
+    await axiosInstance.get("/api/refresh");
   } catch (err) {
     Cookies.remove("access-key");
     Cookies.remove("refresh-key");

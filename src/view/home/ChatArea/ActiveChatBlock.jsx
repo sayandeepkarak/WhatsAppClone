@@ -34,13 +34,12 @@ const ActiveChatBlock = ({ socket, openFriend, open }) => {
   };
 
   const getAllChats = useCallback(async () => {
-    let accesstoken = Cookies.get("access-key");
+    const accesstoken = Cookies.get("access-key");
     if (!accesstoken) {
-      accesstoken = await setToken();
+      await setToken();
     }
     try {
       const chatRes = await axiosInstance("/api/getChat", {
-        headers: { Authorization: `Bearer ${accesstoken}` },
         params: { chatId: _id },
       });
       if (chatRes.status !== 204) {
