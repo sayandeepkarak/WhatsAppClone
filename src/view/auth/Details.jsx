@@ -12,7 +12,6 @@ import { useFormik } from "formik";
 import { userDetailsSchema } from "../../schema";
 import ImagePreview from "./ImagePreview";
 import axiosInstance from "../../modules/Axios";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 const Details = ({ email, openLoader, closeLoader }) => {
@@ -32,7 +31,7 @@ const Details = ({ email, openLoader, closeLoader }) => {
     onSubmit: async (value) => {
       openLoader("Loading...");
       try {
-        const res = await axiosInstance.post(
+        await axiosInstance.post(
           "api/uploadDetails",
           { ...value, email },
           {
@@ -41,16 +40,6 @@ const Details = ({ email, openLoader, closeLoader }) => {
             },
           }
         );
-        const date = new Date();
-        date.setMinutes(date.getMinutes() + 1);
-        Cookies.set("refresh-key", res.data.refreshToken, {
-          path: "/",
-          expires: 90,
-        });
-        Cookies.set("access-key", res.data.accessToken, {
-          path: "/",
-          expires: date,
-        });
         navigate("/");
       } catch (error) {
         console.log(error);

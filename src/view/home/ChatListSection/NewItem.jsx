@@ -17,23 +17,17 @@ import { openChatArea } from "../../../store/activeChatSlice";
 const NewItem = ({ data, friendsId }) => {
   const friends = useSelector((state) => state.friends.value);
   const dispatch = useDispatch();
-  const photoUrl = `${String(data.photoUrl).replace("\\", "/")}`;
+  const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${data.photoUrl}`;
 
   const handleAddPerson = async () => {
-    let accesstoken = Cookies.get("access-key");
+    const accesstoken = Cookies.get("access-key");
     if (!accesstoken) {
-      accesstoken = await setToken();
+      await setToken();
     }
     try {
-      await axiosInstance.post(
-        "/api/createConnection",
-        {
-          personId: data._id,
-        },
-        {
-          headers: { Authorization: `Bearer ${accesstoken}` },
-        }
-      );
+      await axiosInstance.post("/api/createConnection", {
+        personId: data._id,
+      });
     } catch (error) {
       if (error.response.status === 401) {
         await setToken();

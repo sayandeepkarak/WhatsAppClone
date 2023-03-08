@@ -14,7 +14,7 @@ import { setToken } from "../../../modules/getAccessToken";
 const HeadSection = ({ setList }) => {
   const userData = useSelector((state) => state.userData.value);
   const navigate = useNavigate();
-  const photoUrl = `${String(userData.photoUrl).replace("\\", "/")}`;
+  const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${userData.photoUrl}`;
   const [img, setImg] = useState(photoUrl);
 
   const handleImageError = () => {
@@ -29,21 +29,12 @@ const HeadSection = ({ setList }) => {
   };
 
   const handleLogout = async () => {
-    let accesstoken = Cookies.get("access-key");
+    const accesstoken = Cookies.get("access-key");
     if (!accesstoken) {
-      accesstoken = await setToken();
+      await setToken();
     }
     try {
-      const refreshToken = Cookies.get("refresh-key");
-      await axiosInstance.post(
-        "api/logout",
-        { refreshToken },
-        {
-          headers: {
-            Authorization: `Bearer ${accesstoken}`,
-          },
-        }
-      );
+      await axiosInstance.post("api/logout");
       Cookies.remove("access-key");
       Cookies.remove("refresh-key");
       navigate("/authentication");

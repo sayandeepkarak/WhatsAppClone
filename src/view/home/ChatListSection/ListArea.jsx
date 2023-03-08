@@ -15,15 +15,12 @@ const ListArea = ({ socket, searchTerm }) => {
 
   useEffect(() => {
     const getAllChats = async () => {
-      let accesstoken = Cookies.get("access-key");
+      const accesstoken = Cookies.get("access-key");
       if (!accesstoken) {
-        accesstoken = await setToken();
+        await setToken();
       }
       try {
-        const chatRes = await axiosInstance("/api/allConnection", {
-          headers: { Authorization: `Bearer ${accesstoken}` },
-        });
-
+        const chatRes = await axiosInstance("/api/allConnection");
         if (chatRes.status !== 204) {
           dispatch(setFriends(chatRes.data.data));
         }
