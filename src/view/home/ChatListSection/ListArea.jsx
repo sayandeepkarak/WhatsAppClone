@@ -34,7 +34,15 @@ const ListArea = ({ socket, searchTerm }) => {
       }
     };
     getAllChats();
-  }, [dispatch]);
+
+    socket.on("newFriend", () => {
+      getAllChats();
+    });
+
+    return () => {
+      socket.off("newFriend");
+    };
+  }, [dispatch, socket]);
 
   return (
     <>

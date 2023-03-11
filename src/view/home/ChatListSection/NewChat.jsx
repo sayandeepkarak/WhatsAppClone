@@ -7,7 +7,7 @@ import SearchBar from "./SearchBar";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 
-const NewChat = () => {
+const NewChat = ({ socket, closeItems }) => {
   const userData = useSelector((state) => state.userData.value);
   const friends = useSelector((state) => state.friends.value);
   const [friendsId, setFriendsId] = useState([]);
@@ -48,7 +48,15 @@ const NewChat = () => {
                 );
               })
               .map((e) => {
-                return <NewItem key={e._id} data={e} friendsId={friendsId} />;
+                return (
+                  <NewItem
+                    key={e._id}
+                    data={e}
+                    friendsId={friendsId}
+                    socket={socket}
+                    close={closeItems}
+                  />
+                );
               })}
           </ChastListArea>
         </>
