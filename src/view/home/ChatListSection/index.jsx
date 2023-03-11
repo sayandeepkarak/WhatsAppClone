@@ -38,7 +38,7 @@ const ChatListSection = ({ socket }) => {
       {listState === "newchat" && (
         <>
           <SlideBlock closeProfile={handleOpenChatList} headText="New Chat">
-            <NewChat />
+            <NewChat socket={socket} closeItems={handleOpenChatList} />
           </SlideBlock>
         </>
       )}

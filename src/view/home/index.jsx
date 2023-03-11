@@ -4,7 +4,7 @@ import ChatArea from "./ChatArea";
 import ChatListSection from "./ChatListSection";
 import { FalseArea, HomeArea, HomeWrapper } from "./home.styled";
 import LoaderScreen from "../../components/Loader";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../../modules/Axios";
 import { setUserData } from "../../store/userDataSlice";
 import { setToken } from "../../modules/getAccessToken";
@@ -14,6 +14,7 @@ let socket;
 
 const Home = () => {
   const dispatch = useDispatch();
+  const { _id, fullName } = useSelector(({ userData }) => userData.value);
   const [load, setLoad] = useState(true);
 
   useEffect(() => {
@@ -33,11 +34,14 @@ const Home = () => {
       }
     };
     getUserData();
-
-    socket = io(process.env.REACT_APP_BACKEND_URL);
+    if (_id) {
+      socket = io(process.env.REACT_APP_BACKEND_URL, {
+        query: { userId: _id, name: fullName },
+      });
+    }
 
     setTimeout(() => setLoad(false), 2000);
-  }, [dispatch]);
+  }, [dispatch, _id, fullName]);
 
   return (
     <>

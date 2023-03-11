@@ -22,7 +22,7 @@ const ChastListItem = ({ socket, data }) => {
 
     let interval = setInterval(() => {
       socket.emit("sendActiveResponse", _id);
-    }, 1000);
+    }, 500);
 
     socket.on("chatUpdate", (chatId, message) => {
       if (chatId === _id) {

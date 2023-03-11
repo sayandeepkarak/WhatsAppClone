@@ -14,8 +14,9 @@ import { setToken } from "../../../modules/getAccessToken";
 import { useDispatch, useSelector } from "react-redux";
 import { openChatArea } from "../../../store/activeChatSlice";
 
-const NewItem = ({ data, friendsId }) => {
+const NewItem = ({ data, friendsId, socket, close }) => {
   const friends = useSelector((state) => state.friends.value);
+  const { fullName } = useSelector(({ userData }) => userData.value);
   const dispatch = useDispatch();
   const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${data.photoUrl}`;
 
@@ -28,6 +29,7 @@ const NewItem = ({ data, friendsId }) => {
       await axiosInstance.post("/api/createConnection", {
         personId: data._id,
       });
+      socket.emit("addFriend", data._id, fullName, data.fullName);
     } catch (error) {
       if (error.response.status === 401) {
         await setToken();
@@ -36,12 +38,13 @@ const NewItem = ({ data, friendsId }) => {
     }
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (friendsId.includes(data._id)) {
       const friendData = friends.find((e) => e.friend._id === data._id);
       dispatch(openChatArea(friendData));
     } else {
-      handleAddPerson();
+      await handleAddPerson();
+      close();
     }
   };
 

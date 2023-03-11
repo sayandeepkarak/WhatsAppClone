@@ -22,7 +22,7 @@ const DefaultArea = () => {
         </DefaultTextArea>
         <span id="lock-icon-text">
           <LockIcon sx={{ fontSize: "13px" }} />
-          End-to-end-encrypted
+          &#169; Sayandeep Karak 2023
         </span>
       </DefaultAreaBlock>
     </>

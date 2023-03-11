@@ -23,6 +23,7 @@ const ActiveChatBlock = ({ socket, openFriend, open }) => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.userData.value);
   const [userActive, setUserActive] = useState(false);
+  const [timerId, setTimerId] = useState("");
 
   const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${friend.photoUrl}`;
 
@@ -72,8 +73,15 @@ const ActiveChatBlock = ({ socket, openFriend, open }) => {
 
     socket.emit("join-chat-room", _id);
 
-    socket.on("recieveUserResponse", (chatId) => {
-      chatId === _id && setUserActive(true);
+    socket.on("recieveUserResponse", function (chatId) {
+      if (chatId === _id) {
+        setUserActive(true);
+        clearTimeout(timerId);
+        const offlineTimer = setTimeout(() => {
+          setUserActive(false);
+        }, 1000);
+        setTimerId(offlineTimer);
+      }
     });
 
     socket.on("chatUpdate", (chatId, message) => {
@@ -84,7 +92,7 @@ const ActiveChatBlock = ({ socket, openFriend, open }) => {
       socket.off("chatUpdate");
       socket.off("recieveUserResponse");
     };
-  }, [dispatch, _id, getAllChats, socket]);
+  }, [dispatch, _id, getAllChats, socket, timerId]);
 
   return (
     <>
