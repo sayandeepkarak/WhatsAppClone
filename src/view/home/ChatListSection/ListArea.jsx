@@ -51,12 +51,12 @@ const ListArea = ({ socket, searchTerm }) => {
       ) : (
         <ChastListArea>
           {friends
-            .filter((e) => {
+            ?.filter((e) => {
               return e.friend.fullName
                 .toLowerCase()
                 .includes(searchTerm.toLowerCase());
             })
-            .map((e) => {
+            ?.map((e) => {
               return <ChastListItem key={e._id} data={e} socket={socket} />;
             })}
         </ChastListArea>

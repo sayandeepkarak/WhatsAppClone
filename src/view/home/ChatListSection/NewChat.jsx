@@ -41,13 +41,13 @@ const NewChat = ({ socket, closeItems }) => {
           <SearchBar setSearch={setSearchText} />
           <ChastListArea>
             {users
-              .filter((e) => {
+              ?.filter((e) => {
                 return (
                   e._id !== userData._id &&
-                  e.fullName.toLowerCase().includes(searchText.toLowerCase())
+                  e.fullName?.toLowerCase().includes(searchText.toLowerCase())
                 );
               })
-              .map((e) => {
+              ?.map((e) => {
                 return (
                   <NewItem
                     key={e._id}
