@@ -12,26 +12,25 @@ import { openChatArea } from "../../../store/activeChatSlice";
 const ChastListItem = ({ socket, data }) => {
   const { fullName, photoUrl } = data.friend;
   const { chats, _id } = data;
-  const photo = `${process.env.REACT_APP_BACKEND_URL}${photoUrl}`;
 
   const dispatch = useDispatch();
   const [lastMessage, setLastMessage] = useState("");
 
   useEffect(() => {
-    socket.emit("join-chat-room", _id);
+    socket?.emit("join-chat-room", _id);
 
     let interval = setInterval(() => {
-      socket.emit("sendActiveResponse", _id);
+      socket?.emit("sendActiveResponse", _id);
     }, 500);
 
-    socket.on("chatUpdate", (chatId, message) => {
+    socket?.on("chatUpdate", (chatId, message) => {
       if (chatId === _id) {
         setLastMessage(message);
-        socket.emit("messageRecieved", chatId, message);
+        socket?.emit("messageRecieved", chatId, message);
       }
     });
 
-    socket.on("messageSent", (chatId, message) => {
+    socket?.on("messageSent", (chatId, message) => {
       if (chatId === _id) {
         setLastMessage(message);
       }
@@ -40,8 +39,8 @@ const ChastListItem = ({ socket, data }) => {
     chats && setLastMessage(chats.message);
 
     return () => {
-      socket.off("chatUpdate");
-      socket.off("messageSent");
+      socket?.off("chatUpdate");
+      socket?.off("messageSent");
       clearInterval(interval);
     };
   }, [chats, _id, socket]);
@@ -56,7 +55,7 @@ const ChastListItem = ({ socket, data }) => {
         <Avatar
           id="mainAvatar"
           alt="x"
-          src={photo}
+          src={`${process.env.REACT_APP_BACKEND_URL}${photoUrl}`}
           sx={{ cursor: "pointer", width: 45, height: 45 }}
           sizes="large"
         />

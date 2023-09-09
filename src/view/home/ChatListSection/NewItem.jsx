@@ -18,7 +18,6 @@ const NewItem = ({ data, friendsId, socket, close }) => {
   const friends = useSelector((state) => state.friends.value);
   const { fullName } = useSelector(({ userData }) => userData.value);
   const dispatch = useDispatch();
-  const photoUrl = `${process.env.REACT_APP_BACKEND_URL}${data.photoUrl}`;
 
   const handleAddPerson = async () => {
     const accesstoken = Cookies.get("access-key");
@@ -29,7 +28,7 @@ const NewItem = ({ data, friendsId, socket, close }) => {
       await axiosInstance.post("/api/createConnection", {
         personId: data._id,
       });
-      socket.emit("addFriend", data._id, fullName, data.fullName);
+      socket?.emit("addFriend", data._id, fullName, data.fullName);
     } catch (error) {
       if (error.response.status === 401) {
         await setToken();
@@ -54,7 +53,7 @@ const NewItem = ({ data, friendsId, socket, close }) => {
         <Avatar
           id="mainAvatar"
           alt="x"
-          src={photoUrl}
+          src={`${process.env.REACT_APP_BACKEND_URL}${data.photoUrl}`}
           sx={{ cursor: "pointer", width: 45, height: 45 }}
           sizes="large"
         />

@@ -11,8 +11,6 @@ import IconButton from "@mui/material/IconButton";
 import defaultImage from "../../../assets/images/defaultuser.jpg";
 
 const FriendProfile = ({ close, data }) => {
-  const photo = `${process.env.REACT_APP_BACKEND_URL}${data.photoUrl}`;
-
   const handleImageError = (e) => (e.target.src = defaultImage);
   return (
     <>
@@ -24,7 +22,11 @@ const FriendProfile = ({ close, data }) => {
           <p>{data.fullName}</p>
         </FriendHead>
         <FriendBody>
-          <img src={photo} onError={handleImageError} alt="x" />
+          <img
+            src={`${process.env.REACT_APP_BACKEND_URL}${data.photoUrl}`}
+            onError={handleImageError}
+            alt="x"
+          />
           <p>{data.fullName}</p>
         </FriendBody>
         {/* <DeleteButton>

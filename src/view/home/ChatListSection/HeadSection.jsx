@@ -31,7 +31,7 @@ const HeadSection = ({ setList }) => {
   const handleLogout = async () => {
     const accesstoken = Cookies.get("access-key");
     if (!accesstoken) {
-      await setToken();
+      !(await setToken()) && navigate("/authentication");
     }
     try {
       await axiosInstance.post("api/logout");
@@ -40,8 +40,7 @@ const HeadSection = ({ setList }) => {
       navigate("/authentication");
     } catch (error) {
       if (error.response.status === 401) {
-        await setToken();
-        handleLogout();
+        !(await setToken()) ? navigate("/authentication") : handleLogout();
       }
     }
   };

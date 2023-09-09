@@ -7,17 +7,19 @@ import { BeatLoader } from "react-spinners";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { setFriends } from "../../../store/friendsSlice";
+import { useNavigate } from "react-router-dom";
 
 const ListArea = ({ socket, searchTerm }) => {
   const friends = useSelector((state) => state.friends.value);
   const [load, setLoad] = useState(true);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getAllChats = async () => {
       const accesstoken = Cookies.get("access-key");
       if (!accesstoken) {
-        await setToken();
+        !(await setToken()) && navigate("/authentication");
       }
       try {
         const chatRes = await axiosInstance("/api/allConnection");
@@ -26,8 +28,7 @@ const ListArea = ({ socket, searchTerm }) => {
         }
       } catch (error) {
         if (error.response.status === 401) {
-          await setToken();
-          getAllChats();
+          !(await setToken()) ? navigate("/authentication") : getAllChats();
         }
       } finally {
         setLoad(false);
@@ -35,14 +36,14 @@ const ListArea = ({ socket, searchTerm }) => {
     };
     getAllChats();
 
-    socket.on("newFriend", () => {
+    socket?.on("newFriend", () => {
       getAllChats();
     });
 
     return () => {
-      socket.off("newFriend");
+      socket?.off("newFriend");
     };
-  }, [dispatch, socket]);
+  }, [dispatch, socket, navigate]);
 
   return (
     <>

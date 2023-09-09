@@ -15,12 +15,14 @@ import { setToken } from "../../../modules/getAccessToken";
 import axiosInstance from "../../../modules/Axios";
 import Chats from "./Chats";
 import ChatSend from "./ChatSend";
+import { useNavigate } from "react-router-dom";
 
 const ActiveChatBlock = ({ socket, openFriend, open }) => {
   const { friend, _id } = useSelector(
     (state) => state.activeChat.value.chatData
   );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userData = useSelector((state) => state.userData.value);
   const [userActive, setUserActive] = useState(false);
   const [timerId, setTimerId] = useState("");
@@ -37,7 +39,7 @@ const ActiveChatBlock = ({ socket, openFriend, open }) => {
   const getAllChats = useCallback(async () => {
     const accesstoken = Cookies.get("access-key");
     if (!accesstoken) {
-      await setToken();
+      !(await setToken()) && navigate("/authentication");
     }
     try {
       const chatRes = await axiosInstance("/api/getChat", {
@@ -48,11 +50,10 @@ const ActiveChatBlock = ({ socket, openFriend, open }) => {
       }
     } catch (error) {
       if (error.response.status === 401) {
-        await setToken();
-        getAllChats();
+        !(await setToken()) ? navigate("/authentication") : getAllChats();
       }
     }
-  }, [_id, dispatch]);
+  }, [_id, dispatch, navigate]);
 
   const handleMessageSend = async (message) => {
     try {
@@ -61,7 +62,7 @@ const ActiveChatBlock = ({ socket, openFriend, open }) => {
         userId: userData._id,
         chatId: _id,
       });
-      socket.emit("chatsend", _id, message);
+      socket?.emit("chatsend", _id, message);
       getAllChats();
     } catch (error) {
       console.log("Error");
@@ -71,9 +72,9 @@ const ActiveChatBlock = ({ socket, openFriend, open }) => {
   useEffect(() => {
     getAllChats();
 
-    socket.emit("join-chat-room", _id);
+    socket?.emit("join-chat-room", _id);
 
-    socket.on("recieveUserResponse", function (chatId) {
+    socket?.on("recieveUserResponse", function (chatId) {
       if (chatId === _id) {
         setUserActive(true);
         clearTimeout(timerId);
@@ -84,13 +85,13 @@ const ActiveChatBlock = ({ socket, openFriend, open }) => {
       }
     });
 
-    socket.on("chatUpdate", (chatId, message) => {
+    socket?.on("chatUpdate", (chatId, message) => {
       chatId === _id && getAllChats();
     });
 
     return () => {
-      socket.off("chatUpdate");
-      socket.off("recieveUserResponse");
+      socket?.off("chatUpdate");
+      socket?.off("recieveUserResponse");
     };
   }, [dispatch, _id, getAllChats, socket, timerId]);
 
