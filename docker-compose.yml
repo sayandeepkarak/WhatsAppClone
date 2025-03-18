@@ -1,0 +1,11 @@
+services:
+  whatsapp_clone_fe:
+    container_name: whatsapp_clone_fe
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${FRONTENT_PRODUCTION_PORT}:80" # Read port from .env
+    restart: unless-stopped
+    env_file:
+      - .env # Load env variables
